@@ -895,46 +895,6 @@ body {
   color: var(--text-muted);
 }
 
-/* SIDE PROMO CARD */
-.side-promo-card {
-  position: relative;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  height: 180px;
-}
-
-.side-promo-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.side-promo-text {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 16px;
-  color: white;
-}
-
-.side-promo-text h4 {
-  font-size: 0.95rem;
-  margin-bottom: 8px;
-}
-
-.btn-side-shop {
-  background: white;
-  color: #064e3b;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.78rem;
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  align-self: flex-start;
-}
 
 /* FOOTER */
 .app-footer {
