@@ -1,0 +1,726 @@
+/* ==========================================================================
+   FRESHHARVEST SUPERMARKET - TWO-STATE SIDEBAR STYLESHEET
+   State 1: Expanded (300px) | State 2: Collapsed (80px)
+   With Icons8 PNG Toggle Icon & High-Visibility Mouse Pointer
+   ========================================================================== */
+
+:root {
+  --bg-app: #f8fafc;
+  --bg-sidebar: #064e3b;
+  --bg-sidebar-hover: #065f46;
+  --bg-sidebar-active: #16a34a;
+  --bg-header: #ffffff;
+  --bg-card: #ffffff;
+  --color-primary: #16a34a;
+  --color-primary-hover: #15803d;
+  --color-accent: #f97316;
+  --color-danger: #ef4444;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-white: #ffffff;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  --sidebar-width: 300px;
+  --sidebar-collapsed-width: 80px;
+}
+
+/* GLOBAL BOX SIZING & OVERFLOW FIXES */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Global High-Visibility Mouse Pointer & Clickable Hover Defaults */
+a,
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+select,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.btn-success,
+.btn-modal-primary,
+.btn-modal-secondary,
+.nav-link,
+.sidebar-toggle,
+.btn-sidebar-collapse,
+.cat-pill,
+.pos-product-card,
+.btn-card-add,
+.qty-btn,
+.btn-remove-item,
+.btn-clear-bill,
+.btn-hold,
+.btn-pay,
+.pay-method-btn,
+.btn-quick-pos,
+.btn-held-bills,
+.fh-modal-close,
+.modal-close,
+.btn-close-modal,
+.tab-btn,
+.filter-chip,
+.badge-action,
+.clickable-row,
+.pagination-btn,
+.dropdown-item,
+.btn-fullscreen,
+.restock-chip {
+  cursor: pointer !important;
+}
+
+/* Shared Fullscreen Toggle Button */
+.btn-fullscreen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  padding: 8px 14px;
+  border-radius: var(--radius-md, 10px);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer !important;
+  transition: all 0.2s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn-fullscreen:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
+.btn-fullscreen.active {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+/* Interactive transitions & pressed state */
+button,
+.btn-primary,
+.btn-secondary,
+.btn-fullscreen,
+.btn-modal-primary,
+.btn-modal-secondary,
+.cat-pill,
+.pay-method-btn,
+.btn-hold,
+.btn-pay {
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+button:active,
+.btn-primary:active,
+.btn-secondary:active,
+.btn-modal-primary:active,
+.btn-modal-secondary:active,
+.cat-pill:active,
+.pay-method-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+/* ==========================================================================
+   SIDEBAR CORE (EXPANDED 270px BY DEFAULT)
+   ========================================================================== */
+/* ==========================================================================
+   SIDEBAR CORE (EXPANDED 290px BY DEFAULT)
+   ========================================================================== */
+.sidebar {
+  width: var(--sidebar-width) !important;
+  background: linear-gradient(180deg, #064e3b 0%, #043d2e 100%) !important;
+  color: var(--text-white) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-shrink: 0 !important;
+  padding: 18px 16px !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  z-index: 1000 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  user-select: none;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Custom Sleek Scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 99px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 197, 94, 0.5);
+}
+
+/* ==========================================================================
+   SIDEBAR HEADER & ICONS8 TOGGLE BUTTON
+   ========================================================================== */
+.sidebar-header,
+.brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 4px 18px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 14px;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.brand,
+.brand-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+
+.brand-logo-cart {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-leaf-icon {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 8px rgba(34, 197, 94, 0.45));
+}
+
+.brand-text-wrap,
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand-text-wrap .brand-text,
+.brand-text h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: #ffffff;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brand-text-wrap .brand-subtitle,
+.brand-text p {
+  font-size: 0.74rem;
+  color: #a7f3d0;
+  font-weight: 500;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 3. EXACT TOGGLE BUTTON STYLES WITH ICONS8 PNG ICON */
+.sidebar-toggle,
+.btn-sidebar-collapse {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18) !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease !important;
+  padding: 0 !important;
+}
+
+.sidebar-toggle:hover,
+.btn-sidebar-collapse:hover {
+  background: #f0fdf4 !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.sidebar-toggle:active,
+.btn-sidebar-collapse:active {
+  background: #e2e8f0 !important;
+  transform: scale(0.95) !important;
+}
+
+.sidebar-toggle:focus-visible,
+.btn-sidebar-collapse:focus-visible {
+  outline: 2px solid #86efac !important;
+  outline-offset: 2px !important;
+}
+
+.sidebar-toggle-icon {
+  width: 24px !important;
+  height: 24px !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+/* ==========================================================================
+   NAVIGATION MENU
+   ========================================================================== */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-grow: 1;
+  margin-bottom: 16px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: #d1fae5;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  cursor: pointer !important;
+}
+
+.nav-link .nav-icon {
+  font-size: 1.2rem;
+  width: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-link .nav-label {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.1px;
+}
+
+.nav-link .nav-arrow {
+  font-size: 0.95rem;
+  color: #059669;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* Navigation Icon Colors */
+.nav-icon.green { color: #4ade80; }
+.nav-icon.emerald { color: #34d399; }
+.nav-icon.teal { color: #2dd4bf; }
+.nav-icon.orange { color: #fb923c; }
+.nav-icon.cyan { color: #22d3ee; }
+.nav-icon.blue { color: #60a5fa; }
+.nav-icon.purple { color: #c084fc; }
+.nav-icon.violet { color: #a78bfa; }
+.nav-icon.lime { color: #a3e635; }
+.nav-icon.green-cart { color: #4ade80; }
+.nav-icon.sky { color: #38bdf8; }
+.nav-icon.teal-alt { color: #2dd4bf; }
+.nav-icon.amber { color: #fbbf24; }
+.nav-icon.yellow { color: #facc15; }
+.nav-icon.green-chart { color: #4ade80; }
+.nav-icon.indigo { color: #818cf8; }
+.nav-icon.slate { color: #cbd5e1; }
+.nav-icon.zinc { color: #e2e8f0; }
+
+/* HOVER STATE */
+.nav-link:hover {
+  background: var(--bg-sidebar-hover);
+  color: #ffffff;
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-link:hover .nav-icon {
+  transform: scale(1.18);
+}
+
+.nav-link:hover .nav-arrow {
+  color: #a7f3d0;
+  transform: translateX(2px);
+}
+
+/* ACTIVE STATE */
+.nav-link.active {
+  background: var(--bg-sidebar-active) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.45);
+}
+
+.nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14%;
+  bottom: 14%;
+  width: 4px;
+  background: #86efac;
+  border-radius: 0 4px 4px 0;
+}
+
+.nav-link.active .nav-arrow {
+  color: #ffffff !important;
+}
+
+.nav-link.active .nav-icon {
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   BOTTOM "GO GREEN" PROMO CARD
+   ========================================================================== */
+.sidebar-promo {
+  background: linear-gradient(135deg, #065f46 0%, #047857 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-top: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+}
+
+.promo-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.promo-leaf,
+.promo-leaf-wrap {
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.promo-text h4 {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.promo-text p {
+  font-size: 0.74rem;
+  color: #a7f3d0;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   STATE 2: COLLAPSED SIDEBAR (80px)
+   ========================================================================== */
+.sidebar.collapsed,
+body.sidebar-collapsed .sidebar {
+  width: var(--sidebar-collapsed-width) !important;
+  padding: 14px 8px !important;
+}
+
+.sidebar.collapsed .brand-text-wrap,
+.sidebar.collapsed .brand-text,
+.sidebar.collapsed .brand-subtitle,
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .nav-arrow,
+.sidebar.collapsed .sidebar-promo .promo-text,
+.sidebar.collapsed .sidebar-promo .promo-watermark,
+body.sidebar-collapsed .sidebar .brand-text-wrap,
+body.sidebar-collapsed .sidebar .brand-text,
+body.sidebar-collapsed .sidebar .brand-subtitle,
+body.sidebar-collapsed .sidebar .nav-label,
+body.sidebar-collapsed .sidebar .nav-arrow,
+body.sidebar-collapsed .sidebar .sidebar-promo .promo-text {
+  display: none !important;
+}
+
+.sidebar.collapsed .sidebar-header,
+.sidebar.collapsed .brand-header,
+body.sidebar-collapsed .sidebar .sidebar-header,
+body.sidebar-collapsed .sidebar .brand-header {
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 4px 0 14px 0 !important;
+}
+
+.sidebar.collapsed .brand,
+.sidebar.collapsed .brand-info,
+body.sidebar-collapsed .sidebar .brand,
+body.sidebar-collapsed .sidebar .brand-info {
+  justify-content: center !important;
+}
+
+.sidebar.collapsed .sidebar-toggle,
+body.sidebar-collapsed .sidebar .sidebar-toggle {
+  display: flex !important;
+  margin: 0 auto !important;
+}
+
+.sidebar.collapsed .nav-link,
+body.sidebar-collapsed .sidebar .nav-link {
+  justify-content: center !important;
+  padding: 12px 6px !important;
+  position: relative !important;
+}
+
+.sidebar.collapsed .nav-link:hover,
+body.sidebar-collapsed .sidebar .nav-link:hover {
+  transform: scale(1.08);
+}
+
+.sidebar.collapsed .promo-content,
+body.sidebar-collapsed .sidebar .promo-content {
+  justify-content: center !important;
+}
+
+.sidebar.collapsed .sidebar-promo,
+body.sidebar-collapsed .sidebar .sidebar-promo {
+  padding: 10px 4px !important;
+}
+
+/* Tooltip on Collapsed Nav Link Hover */
+.sidebar.collapsed .nav-link:hover::after,
+body.sidebar-collapsed .sidebar .nav-link:hover::after {
+  content: attr(data-tooltip);
+  position: fixed;
+  left: 90px;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 7px 13px;
+  border-radius: 7px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  z-index: 99999;
+  pointer-events: none;
+  animation: fhTooltipFade 0.15s ease-out forwards;
+}
+
+@keyframes fhTooltipFade {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ==========================================================================
+   MAIN CONTENT RESPONSIVE MARGINS (NO OVERLAP & NO DOUBLE MARGIN)
+   ========================================================================== */
+.main-wrapper,
+.app-layout > .main-content,
+.app-layout > .page-container {
+  margin-left: 300px !important;
+  width: calc(100% - 300px) !important;
+  max-width: calc(100% - 300px) !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Inner content containers inside main-wrapper must NOT repeat margin-left */
+.main-wrapper > main,
+.main-wrapper .cashier-content,
+.main-wrapper .products-content,
+.main-wrapper .store-content,
+.main-wrapper .reports-content,
+.main-wrapper .stock-content,
+.main-wrapper .bills-content,
+.main-wrapper .all-items-content,
+.main-wrapper .customers-content {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+body.sidebar-collapsed .main-wrapper,
+body.sidebar-collapsed .app-layout > .main-content,
+body.sidebar-collapsed .app-layout > .page-container,
+.main-content.sidebar-collapsed,
+.main-wrapper.sidebar-collapsed {
+  margin-left: 80px !important;
+  width: calc(100% - 80px) !important;
+  max-width: calc(100% - 80px) !important;
+}
+
+/* ==========================================================================
+   TABLET RESPONSIVENESS (Expanded: 260px | Collapsed: 80px)
+   ========================================================================== */
+@media (max-width: 1100px) {
+  :root {
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 80px;
+  }
+
+  .sidebar {
+    width: 260px !important;
+  }
+
+  .main-wrapper,
+  .app-layout > .main-content,
+  .app-layout > .page-container {
+    margin-left: 260px !important;
+    width: calc(100% - 260px) !important;
+    max-width: calc(100% - 260px) !important;
+  }
+
+  body.sidebar-collapsed .sidebar,
+  .sidebar.collapsed {
+    width: 80px !important;
+  }
+
+  body.sidebar-collapsed .main-wrapper,
+  body.sidebar-collapsed .app-layout > .main-content,
+  body.sidebar-collapsed .app-layout > .page-container {
+    margin-left: 80px !important;
+    width: calc(100% - 80px) !important;
+    max-width: calc(100% - 80px) !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS (< 768px: Slide-in Drawer with Backdrop)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 300px !important;
+    transform: translateX(-100%) !important;
+    position: fixed !important;
+    z-index: 10000 !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5) !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .sidebar.open,
+  .sidebar.active,
+  .sidebar.show {
+    transform: translateX(0) !important;
+  }
+
+  .main-wrapper,
+  .main-content,
+  .page-container,
+  .products-content,
+  .store-content,
+  .reports-content,
+  .stock-content,
+  .bills-content,
+  .cashier-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body.sidebar-collapsed .main-wrapper,
+  body.sidebar-collapsed .main-content,
+  body.sidebar-collapsed .page-container,
+  body.sidebar-collapsed .products-content,
+  body.sidebar-collapsed .store-content,
+  body.sidebar-collapsed .reports-content,
+  body.sidebar-collapsed .stock-content,
+  body.sidebar-collapsed .bills-content,
+  body.sidebar-collapsed .cashier-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .sidebar-mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: none;
+  }
+
+  .sidebar-mobile-backdrop.active {
+    display: block;
+  }
+}

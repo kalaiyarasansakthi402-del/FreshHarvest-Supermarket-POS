@@ -1,0 +1,31 @@
+{
+  "name": "freshharvest-supermarket-pos",
+  "version": "2.0.0",
+  "description": "FreshHarvest Supermarket Management & POS System — Complete Enterprise Solution",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "test": "node scripts/test-suite.js",
+    "audit": "node scripts/audit.js",
+    "lint": "node scripts/lint-check.js",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  },
+  "keywords": [
+    "pos",
+    "supermarket",
+    "inventory-management",
+    "billing",
+    "pwa",
+    "retail",
+    "cashier",
+    "freshharvest"
+  ],
+  "author": "FreshHarvest Team",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

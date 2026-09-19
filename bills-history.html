@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreshHarvest Supermarket - Bills History & Invoices</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Dedicated CSS -->
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="billing.css">
+  <link rel="stylesheet" href="bills-history.css">
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-logo-cart">
+            <svg class="cart-leaf-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 10H12L16.5 32H38L42 16H15" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="19" cy="38" r="3.5" fill="#22c55e"/>
+              <circle cx="35" cy="38" r="3.5" fill="#22c55e"/>
+              <path d="M26 18C26 12 33 8 36 6C36 11 31 16 26 18Z" fill="#4ade80"/>
+              <path d="M24 16C21 11 15 10 13 10C13 14 18 17 24 16Z" fill="#22c55e"/>
+              <path d="M25 21V15" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brand-text-wrap">
+            <span class="brand-text">FreshHarvest</span>
+            <span class="brand-subtitle">Good Food Brighter You</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar" aria-expanded="true" title="Collapse sidebar">
+          <img src="https://img.icons8.com/?size=100&id=gjbbiMeQzowz&format=png&color=000000" alt="Toggle sidebar" class="sidebar-toggle-icon">
+        </button>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="home.html" class="nav-link" data-tooltip="Home">
+          <span class="nav-icon green">🏠</span>
+          <span class="nav-label">Home</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="billing.html" class="nav-link" data-tooltip="Billing / POS">
+          <span class="nav-icon emerald">▣</span>
+          <span class="nav-label">Billing / POS</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="cashier.html" class="nav-link" data-tooltip="Cashier Desk">
+          <span class="nav-icon teal">👨‍💼</span>
+          <span class="nav-label">Cashier Desk</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="products.html" class="nav-link" data-tooltip="Products">
+          <span class="nav-icon orange">📦</span>
+          <span class="nav-label">Products</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="items.html" class="nav-link" data-tooltip="Items">
+          <span class="nav-icon cyan">📋</span>
+          <span class="nav-label">Items</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="stock-control.html" class="nav-link" data-tooltip="Stock Control">
+          <span class="nav-icon blue">📊</span>
+          <span class="nav-label">Stock Control</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="bills-history.html" class="nav-link active" data-tooltip="Bills History">
+          <span class="nav-icon purple">▤</span>
+          <span class="nav-label">Bills History</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="customers.html" class="nav-link" data-tooltip="Customers">
+          <span class="nav-icon violet">👥</span>
+          <span class="nav-label">Customers</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="categories.html" class="nav-link" data-tooltip="Categories">
+          <span class="nav-icon lime">▦</span>
+          <span class="nav-label">Categories</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="purchases.html" class="nav-link" data-tooltip="Purchases">
+          <span class="nav-icon green-cart">🛒</span>
+          <span class="nav-label">Purchases</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="suppliers.html" class="nav-link" data-tooltip="Suppliers">
+          <span class="nav-icon sky">🚚</span>
+          <span class="nav-label">Suppliers</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="returns.html" class="nav-link" data-tooltip="Returns">
+          <span class="nav-icon teal-alt">↩</span>
+          <span class="nav-label">Returns</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="offers-deals.html" class="nav-link" data-tooltip="Offers & Deals">
+          <span class="nav-icon amber">🏷️</span>
+          <span class="nav-label">Offers & Deals</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="loyalty.html" class="nav-link" data-tooltip="Loyalty">
+          <span class="nav-icon yellow">⭐</span>
+          <span class="nav-label">Loyalty</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="reports-profit.html" class="nav-link" data-tooltip="Reports & Profit">
+          <span class="nav-icon green-chart">📈</span>
+          <span class="nav-label">Reports & Profit</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="staff-roles.html" class="nav-link" data-tooltip="Staff & Roles">
+          <span class="nav-icon indigo">👤</span>
+          <span class="nav-label">Staff & Roles</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="backup-restore.html" class="nav-link" data-tooltip="Backup & Restore">
+          <span class="nav-icon slate">💾</span>
+          <span class="nav-label">Backup & Restore</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="store-settings.html" class="nav-link" data-tooltip="Store Settings">
+          <span class="nav-icon zinc">⚙</span>
+          <span class="nav-label">Store Settings</span>
+          <span class="nav-arrow">›</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-promo">
+        <div class="promo-content">
+          <div class="promo-leaf">🌿</div>
+          <div class="promo-text">
+            <h4>FreshHarvest</h4>
+            <p>Smart Supermarket POS</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <div class="header-left">
+          <h2 class="page-header-title">Billing & Transaction Ledger</h2>
+        </div>
+
+        <div class="header-right">
+          <a href="billing.html" class="btn-primary" style="text-decoration: none;">
+            + Open POS Billing
+          </a>
+          <div class="user-profile">
+            <div class="user-avatar">👨‍💼</div>
+            <div class="user-info">
+              <span class="user-name">Accounts Desk</span>
+              <small class="user-role">Billing Audit</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main class="bills-content" style="padding: 24px 28px; display: flex; flex-direction: column; gap: 24px;">
+        <!-- METRICS ROW -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon green">💰</div>
+            <div>
+              <small>Total Sales Revenue</small>
+              <h3 id="metricTotalSales">₹0.00</h3>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon blue">🧾</div>
+            <div>
+              <small>Total Invoices Issued</small>
+              <h3 id="metricTotalInvoices">0</h3>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon purple">📊</div>
+            <div>
+              <small>Average Invoice Value</small>
+              <h3 id="metricAvgValue">₹0.00</h3>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon orange">🏷️</div>
+            <div>
+              <small>Total Discounts Given</small>
+              <h3 id="metricTotalDiscounts">₹0.00</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILTER & SEARCH BAR -->
+        <div class="filter-card" style="display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+          <div class="search-wrap" style="flex: 1; max-width: 400px;">
+            <input type="text" id="billSearchInput" placeholder="Search by Bill #, customer name or phone..." class="fh-input" style="margin: 0;">
+          </div>
+
+          <div class="filter-controls" style="display: flex; gap: 10px;">
+            <select id="paymentMethodFilter" onchange="renderBillsTable()" class="fh-input" style="margin: 0; width: auto;">
+              <option value="All">All Payment Methods</option>
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI</option>
+              <option value="Card">Card</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- BILLS TABLE -->
+        <div class="table-card">
+          <div class="table-responsive-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Bill #</th>
+                  <th>Date & Time</th>
+                  <th>Customer</th>
+                  <th>Mobile Phone</th>
+                  <th>Items</th>
+                  <th>Grand Total</th>
+                  <th>Payment</th>
+                  <th>Cashier</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="billsTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- VIEW / PRINT INVOICE MODAL -->
+  <div class="modal-overlay" id="viewInvoiceModal">
+    <div class="modal-card receipt-card">
+      <div class="modal-header">
+        <div>
+          <h3>Invoice Receipt Details</h3>
+          <small id="invModalSubtitle">FreshHarvest Official Receipt</small>
+        </div>
+        <button class="btn-close-modal" onclick="closeInvoiceModal()">✕</button>
+      </div>
+
+      <!-- MESSAGING ACTIONS BAR -->
+      <div class="receipt-messaging-actions">
+        <button id="btnInvWhatsApp" class="btn-action-whatsapp" onclick="sendInvoiceWhatsApp()">
+          📱 WhatsApp (<span id="invWaAmount">₹0.00</span>)
+        </button>
+        <button id="btnInvSMS" class="btn-action-sms" onclick="sendInvoiceSMS()">
+          💬 SMS
+        </button>
+      </div>
+
+      <div class="receipt-content" id="printableInvoice">
+        <div class="receipt-header-text">
+          <h2>FreshHarvest Supermarket</h2>
+          <p>Shop #14, Green Valley High Street, Bengaluru</p>
+          <p>Phone: +91 98765 43210 | GST: 29ABCDE1234F1Z5</p>
+          <div class="receipt-divider"></div>
+          <div class="receipt-meta-row">
+            <span>Bill No: <strong id="invNo">FH-1091</strong></span>
+            <span id="invDateTime">18 Sep 2026, 09:30 PM</span>
+          </div>
+          <div class="receipt-meta-row">
+            <span>Customer: <strong id="invCustomer">Walk-in</strong></span>
+            <span>Method: <strong id="invMethod">UPI</strong></span>
+          </div>
+          <div class="receipt-meta-row" id="invPhoneRow" style="display: none;">
+            <span>Phone: <strong id="invPhone">—</strong></span>
+          </div>
+          <div class="receipt-divider"></div>
+        </div>
+
+        <table class="receipt-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="invItemsBody">
+            <!-- Items rendered dynamically -->
+          </tbody>
+        </table>
+
+        <div class="receipt-divider"></div>
+
+        <div class="receipt-totals">
+          <div class="rec-row"><span>Subtotal:</span> <span id="invSubtotal">₹0.00</span></div>
+          <div class="rec-row"><span>Discount:</span> <span id="invDiscount">- ₹0.00</span></div>
+          <div class="rec-row"><span>Tax (GST):</span> <span id="invTax">+ ₹0.00</span></div>
+          <div class="rec-row grand-total"><span>TOTAL:</span> <strong id="invGrandTotal">₹0.00</strong></div>
+        </div>
+
+        <div class="receipt-footer-text">
+          <p>Thank you for shopping at FreshHarvest Supermarket!</p>
+          <p>Fresh Products • Smart Billing • Better Shopping 🌱</p>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button class="btn-secondary" onclick="closeInvoiceModal()">Close</button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-secondary" style="color: #ef4444; border-color: #fca5a5;" onclick="processReturnForActiveBill()">↩️ Issue Refund</button>
+          <button class="btn-primary" onclick="window.print()">🖨️ Print Invoice</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dedicated JS -->
+  <script src="data-store.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="bills-history.js"></script>
+</body>
+</html>

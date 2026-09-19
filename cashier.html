@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreshHarvest Supermarket - Cashier Desk & Shift Management</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Dedicated CSS -->
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="cashier.css">
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-logo-cart">
+            <svg class="cart-leaf-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 10H12L16.5 32H38L42 16H15" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="19" cy="38" r="3.5" fill="#22c55e"/>
+              <circle cx="35" cy="38" r="3.5" fill="#22c55e"/>
+              <path d="M26 18C26 12 33 8 36 6C36 11 31 16 26 18Z" fill="#4ade80"/>
+              <path d="M24 16C21 11 15 10 13 10C13 14 18 17 24 16Z" fill="#22c55e"/>
+              <path d="M25 21V15" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brand-text-wrap">
+            <span class="brand-text">FreshHarvest</span>
+            <span class="brand-subtitle">Good Food Brighter You</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar" aria-expanded="true" title="Collapse sidebar">
+          <img src="https://img.icons8.com/?size=100&id=gjbbiMeQzowz&format=png&color=000000" alt="Toggle sidebar" class="sidebar-toggle-icon">
+        </button>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="home.html" class="nav-link" data-tooltip="Home">
+          <span class="nav-icon green">🏠</span>
+          <span class="nav-label">Home</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="billing.html" class="nav-link" data-tooltip="Billing / POS">
+          <span class="nav-icon emerald">▣</span>
+          <span class="nav-label">Billing / POS</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="cashier.html" class="nav-link active" data-tooltip="Cashier Desk">
+          <span class="nav-icon teal">👨‍💼</span>
+          <span class="nav-label">Cashier Desk</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="products.html" class="nav-link" data-tooltip="Products">
+          <span class="nav-icon orange">📦</span>
+          <span class="nav-label">Products</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="items.html" class="nav-link" data-tooltip="Items">
+          <span class="nav-icon cyan">📋</span>
+          <span class="nav-label">Items</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="stock-control.html" class="nav-link" data-tooltip="Stock Control">
+          <span class="nav-icon blue">📊</span>
+          <span class="nav-label">Stock Control</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="bills-history.html" class="nav-link" data-tooltip="Bills History">
+          <span class="nav-icon purple">▤</span>
+          <span class="nav-label">Bills History</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="customers.html" class="nav-link" data-tooltip="Customers">
+          <span class="nav-icon violet">👥</span>
+          <span class="nav-label">Customers</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="categories.html" class="nav-link" data-tooltip="Categories">
+          <span class="nav-icon lime">▦</span>
+          <span class="nav-label">Categories</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="purchases.html" class="nav-link" data-tooltip="Purchases">
+          <span class="nav-icon green-cart">🛒</span>
+          <span class="nav-label">Purchases</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="suppliers.html" class="nav-link" data-tooltip="Suppliers">
+          <span class="nav-icon sky">🚚</span>
+          <span class="nav-label">Suppliers</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="returns.html" class="nav-link" data-tooltip="Returns">
+          <span class="nav-icon teal-alt">↩</span>
+          <span class="nav-label">Returns</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="offers-deals.html" class="nav-link" data-tooltip="Offers & Deals">
+          <span class="nav-icon amber">🏷️</span>
+          <span class="nav-label">Offers & Deals</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="loyalty.html" class="nav-link" data-tooltip="Loyalty">
+          <span class="nav-icon yellow">⭐</span>
+          <span class="nav-label">Loyalty</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="reports-profit.html" class="nav-link" data-tooltip="Reports & Profit">
+          <span class="nav-icon green-chart">📈</span>
+          <span class="nav-label">Reports & Profit</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="staff-roles.html" class="nav-link" data-tooltip="Staff & Roles">
+          <span class="nav-icon indigo">👤</span>
+          <span class="nav-label">Staff & Roles</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="backup-restore.html" class="nav-link" data-tooltip="Backup & Restore">
+          <span class="nav-icon slate">💾</span>
+          <span class="nav-label">Backup & Restore</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="store-settings.html" class="nav-link" data-tooltip="Store Settings">
+          <span class="nav-icon zinc">⚙</span>
+          <span class="nav-label">Store Settings</span>
+          <span class="nav-arrow">›</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-promo">
+        <div class="promo-content">
+          <div class="promo-leaf">🌿</div>
+          <div class="promo-text">
+            <h4>FreshHarvest</h4>
+            <p>Smart Supermarket POS</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <div class="header-left">
+          <h2 class="page-header-title">Cashier Desk & Shift Reconciliation</h2>
+        </div>
+
+        <div class="header-right">
+          <a href="billing.html" class="btn-primary" style="text-decoration: none;">
+            ⚡ Open POS Terminal
+          </a>
+          <div class="user-profile">
+            <div class="user-avatar">👨‍💼</div>
+            <div class="user-info">
+              <span class="user-name">Priya Cashier</span>
+              <small class="user-role">Counter #01</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main class="cashier-content">
+        
+        <!-- ACTIVE SHIFT HERO CARD -->
+        <section class="income-hero-card">
+          <div class="income-hero-top">
+            <div class="hero-income-main">
+              <div class="hero-tag-badge">
+                🟢 Active Shift Session (Morning Shift)
+              </div>
+              <div class="hero-amount-wrap">
+                <span class="hero-label">Shift Cash in Drawer (Expected)</span>
+                <h1 class="hero-amount" id="shiftExpectedCash">₹0.00</h1>
+              </div>
+              <small id="shiftStartTime" style="color: #ccfbf1;">Shift Started: 18 Sep 2026, 08:00 AM</small>
+            </div>
+
+            <div class="hero-income-substats">
+              <div class="substat-item">
+                <span class="substat-label">Opening Float</span>
+                <strong class="substat-val" id="shiftOpeningFloat">₹2,000.00</strong>
+              </div>
+              <div class="substat-item">
+                <span class="substat-label">Cash Sales</span>
+                <strong class="substat-val text-green" id="shiftCashSales">₹0.00</strong>
+              </div>
+              <div class="substat-item">
+                <span class="substat-label">Digital Sales (UPI/Card)</span>
+                <strong class="substat-val" id="shiftDigitalSales">₹0.00</strong>
+              </div>
+              <div class="substat-item highlight">
+                <span class="substat-label">Total Shift Sales</span>
+                <strong class="substat-val" id="shiftTotalSales">₹0.00</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="income-channels-bar">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <span class="channel-pill">Cashier: <strong>Priya Cashier</strong></span>
+              <span class="channel-pill">Terminal: <strong>Counter #01</strong></span>
+              <span class="channel-pill">Bills Count: <strong id="shiftBillsCount">0</strong></span>
+            </div>
+            <button type="button" class="btn-quick-pos" onclick="openCloseShiftModal()">
+              🔒 Close Shift & Reconcile
+            </button>
+          </div>
+        </section>
+
+        <!-- CASH DENOMINATION & RECONCILIATION CALCULATOR -->
+        <section class="section-block">
+          <div class="section-header">
+            <div>
+              <h3>💵 Cash Drawer Count & Denomination Calculator</h3>
+              <p class="section-desc">Count physical cash in the till to verify drawer balance against register sales</p>
+            </div>
+            <button type="button" class="btn-reset-counts" onclick="resetDenominations()">
+              ↻ Reset Counts
+            </button>
+          </div>
+
+          <div class="denomination-grid denom-grid">
+            <div class="denom-card">
+              <span class="denom-note">₹500 Note</span>
+              <input type="number" min="0" value="0" class="denom-input" id="d500" oninput="calcDenominations()" onfocus="this.select()">
+              <strong class="denom-total" id="d500Total">₹0.00</strong>
+            </div>
+
+            <div class="denom-card">
+              <span class="denom-note">₹200 Note</span>
+              <input type="number" min="0" value="0" class="denom-input" id="d200" oninput="calcDenominations()" onfocus="this.select()">
+              <strong class="denom-total" id="d200Total">₹0.00</strong>
+            </div>
+
+            <div class="denom-card">
+              <span class="denom-note">₹100 Note</span>
+              <input type="number" min="0" value="0" class="denom-input" id="d100" oninput="calcDenominations()" onfocus="this.select()">
+              <strong class="denom-total" id="d100Total">₹0.00</strong>
+            </div>
+
+            <div class="denom-card">
+              <span class="denom-note">₹50 Note</span>
+              <input type="number" min="0" value="0" class="denom-input" id="d50" oninput="calcDenominations()" onfocus="this.select()">
+              <strong class="denom-total" id="d50Total">₹0.00</strong>
+            </div>
+
+            <div class="denom-card">
+              <span class="denom-note">₹20 Note</span>
+              <input type="number" min="0" value="0" class="denom-input" id="d20" oninput="calcDenominations()" onfocus="this.select()">
+              <strong class="denom-total" id="d20Total">₹0.00</strong>
+            </div>
+
+            <div class="denom-card">
+              <span class="denom-note">₹10 Note</span>
+              <input type="number" min="0" value="0" class="denom-input" id="d10" oninput="calcDenominations()" onfocus="this.select()">
+              <strong class="denom-total" id="d10Total">₹0.00</strong>
+            </div>
+
+            <div class="denom-card">
+              <span class="denom-note">Coins (₹1, ₹2, ₹5)</span>
+              <input type="number" min="0" value="0" class="denom-input" id="dCoins" oninput="calcDenominations()" onfocus="this.select()">
+              <strong class="denom-total" id="dCoinsTotal">₹0.00</strong>
+            </div>
+          </div>
+
+          <!-- RECONCILIATION SUMMARY BAR -->
+          <div class="reconcile-result-bar">
+            <div class="reconcile-metric-item">
+              <small>Physical Counted Cash</small>
+              <h3 id="actualCountedTotal">₹0.00</h3>
+            </div>
+            <div class="reconcile-metric-item">
+              <small>Expected in Drawer</small>
+              <h3 id="expectedDrawerTotal">₹0.00</h3>
+            </div>
+            <div class="reconcile-metric-item discrepancy">
+              <small>Difference</small>
+              <h3 id="drawerVariance">₹0.00</h3>
+            </div>
+            <div class="reconcile-metric-item">
+              <small>Till Status</small>
+              <h3 id="reconcileStatusBadge" style="color: #16a34a;">✅ Balanced</h3>
+            </div>
+          </div>
+        </section>
+
+        <!-- RECENT SHIFT HISTORY -->
+        <section class="section-block">
+          <div class="section-header">
+            <div>
+              <h3>📋 Closed Shift History & Audit Log</h3>
+              <p class="section-desc">Historical records of cashier shift settlements</p>
+            </div>
+          </div>
+
+          <div class="table-responsive-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Shift ID</th>
+                  <th>Date & Time</th>
+                  <th>Cashier</th>
+                  <th>Opening Float</th>
+                  <th>Total Sales</th>
+                  <th>Counted Cash</th>
+                  <th>Variance</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="shiftHistoryBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- CLOSE SHIFT MODAL -->
+  <div class="fh-modal-backdrop" id="closeShiftModal">
+    <div class="fh-modal-container small">
+      <div class="fh-modal-header">
+        <div>
+          <h3>🔒 Close Cashier Shift</h3>
+          <small>Confirm shift closing and print summary</small>
+        </div>
+        <button class="fh-modal-close" onclick="closeCloseShiftModal()">✕</button>
+      </div>
+      <div class="fh-modal-body">
+        <p style="margin-bottom: 14px; font-size: 0.9rem; color: #334155;">
+          Are you sure you want to end this cashier shift? All transactions will be finalized and a settlement summary will be generated.
+        </p>
+        <div class="form-group">
+          <label>Cashier Closing Notes:</label>
+          <input type="text" id="shiftClosingNotes" placeholder="Optional notes (e.g. all balanced)" class="fh-input">
+        </div>
+      </div>
+      <div class="fh-modal-footer">
+        <button class="btn-modal-secondary" onclick="closeCloseShiftModal()">Cancel</button>
+        <button class="btn-modal-primary" onclick="confirmCloseShift()">End Shift & Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dedicated JS -->
+  <script src="data-store.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="cashier.js"></script>
+</body>
+</html>

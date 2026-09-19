@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreshHarvest Supermarket - Store Settings</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Dedicated CSS -->
+  <link rel="stylesheet" href="store-settings.css">
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+  <div class="app-layout">
+            <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-logo-cart">
+            <svg class="cart-leaf-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 10H12L16.5 32H38L42 16H15" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="19" cy="38" r="3.5" fill="#22c55e"/>
+              <circle cx="35" cy="38" r="3.5" fill="#22c55e"/>
+              <path d="M26 18C26 12 33 8 36 6C36 11 31 16 26 18Z" fill="#4ade80"/>
+              <path d="M24 16C21 11 15 10 13 10C13 14 18 17 24 16Z" fill="#22c55e"/>
+              <path d="M25 21V15" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brand-text-wrap">
+            <span class="brand-text">FreshHarvest</span>
+            <span class="brand-subtitle">Good Food Brighter You</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar" aria-expanded="true" title="Collapse sidebar">
+          <img src="https://img.icons8.com/?size=100&id=gjbbiMeQzowz&format=png&color=000000" alt="Toggle sidebar" class="sidebar-toggle-icon">
+        </button>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="home.html" class="nav-link" data-tooltip="Home">
+          <span class="nav-icon green">🏠</span>
+          <span class="nav-label">Home</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="billing.html" class="nav-link" data-tooltip="Billing / POS">
+          <span class="nav-icon emerald">▣</span>
+          <span class="nav-label">Billing / POS</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="cashier.html" class="nav-link" data-tooltip="Cashier">
+          <span class="nav-icon teal">👨‍💼</span>
+          <span class="nav-label">Cashier</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="products.html" class="nav-link" data-tooltip="Products">
+          <span class="nav-icon orange">📦</span>
+          <span class="nav-label">Products</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="items.html" class="nav-link" data-tooltip="Items">
+          <span class="nav-icon cyan">📋</span>
+          <span class="nav-label">Items</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="stock-control.html" class="nav-link" data-tooltip="Stock Control">
+          <span class="nav-icon blue">📊</span>
+          <span class="nav-label">Stock Control</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="bills-history.html" class="nav-link" data-tooltip="Bills History">
+          <span class="nav-icon purple">▤</span>
+          <span class="nav-label">Bills History</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="customers.html" class="nav-link" data-tooltip="Customers">
+          <span class="nav-icon violet">👥</span>
+          <span class="nav-label">Customers</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="categories.html" class="nav-link" data-tooltip="Categories">
+          <span class="nav-icon lime">▦</span>
+          <span class="nav-label">Categories</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="purchases.html" class="nav-link" data-tooltip="Purchases">
+          <span class="nav-icon green-cart">🛒</span>
+          <span class="nav-label">Purchases</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="suppliers.html" class="nav-link" data-tooltip="Suppliers">
+          <span class="nav-icon sky">🚚</span>
+          <span class="nav-label">Suppliers</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="returns.html" class="nav-link" data-tooltip="Returns">
+          <span class="nav-icon teal-alt">↩</span>
+          <span class="nav-label">Returns</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="offers-deals.html" class="nav-link" data-tooltip="Offers & Deals">
+          <span class="nav-icon amber">🏷️</span>
+          <span class="nav-label">Offers & Deals</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="loyalty.html" class="nav-link" data-tooltip="Loyalty">
+          <span class="nav-icon yellow">⭐</span>
+          <span class="nav-label">Loyalty</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="reports-profit.html" class="nav-link" data-tooltip="Reports & Profit">
+          <span class="nav-icon green-chart">📈</span>
+          <span class="nav-label">Reports & Profit</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="staff-roles.html" class="nav-link" data-tooltip="Staff & Roles">
+          <span class="nav-icon indigo">👤</span>
+          <span class="nav-label">Staff & Roles</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="backup-restore.html" class="nav-link" data-tooltip="Backup & Restore">
+          <span class="nav-icon slate">💾</span>
+          <span class="nav-label">Backup & Restore</span>
+          <span class="nav-arrow">›</span>
+        </a>
+        <a href="store-settings.html" class="nav-link active" data-tooltip="Store Settings">
+          <span class="nav-icon zinc">⚙</span>
+          <span class="nav-label">Store Settings</span>
+          <span class="nav-arrow">›</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-promo">
+        <div class="promo-content">
+          <div class="promo-leaf">🌿</div>
+          <div class="promo-text">
+            <h4>Go Green</h4>
+            <p>Shop Smart Live Healthy</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <div class="header-left">
+          <h2 class="page-header-title">Store Profile, Billing & POS Preferences</h2>
+        </div>
+
+        <div class="header-right">
+          <div class="user-profile">
+            <div class="user-avatar">👨‍💼</div>
+            <div class="user-info">
+              <span class="user-name">Store Admin</span>
+              <small class="user-role">Configuration Desk</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main class="settings-content">
+        <form id="settingsForm" onsubmit="handleSettingsSave(event)">
+          <!-- STORE INFORMATION -->
+          <div class="settings-card">
+            <h3>🏪 Store Identity & Contact</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Supermarket Name *</label>
+                <input type="text" id="setStoreName" required placeholder="FreshHarvest Supermarket">
+              </div>
+              <div class="form-group">
+                <label>Store Slogan / Tagline</label>
+                <input type="text" id="setTagline" placeholder="Good Food Brighter You">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Store Physical Address</label>
+              <input type="text" id="setAddress" placeholder="Plot 42, Green Avenue, Fresh City">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Contact Phone Number *</label>
+                <input type="tel" id="setPhone" required placeholder="+91 98765 43210">
+              </div>
+              <div class="form-group">
+                <label>Support Email Address *</label>
+                <input type="email" id="setEmail" required placeholder="support@freshharvest.com">
+              </div>
+            </div>
+          </div>
+
+          <!-- TAX & CURRENCY -->
+          <div class="settings-card">
+            <h3>🧾 Taxation & Billing Parameters</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>GST / Tax Registration ID</label>
+                <input type="text" id="setGST" placeholder="GSTIN29ABCDE1234F1Z5">
+              </div>
+              <div class="form-group">
+                <label>Default GST Tax Rate (%) *</label>
+                <input type="number" id="setTaxRate" required min="0" max="28" step="0.5" value="5">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Currency Symbol *</label>
+                <input type="text" id="setCurrency" required value="₹">
+              </div>
+              <div class="form-group">
+                <label>Loyalty Points Earn Ratio (pts per ₹100 spent)</label>
+                <input type="number" id="setPointsRatio" value="10" min="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- RECEIPT CUSTOMIZATION -->
+          <div class="settings-card">
+            <h3>🖨️ POS Receipt Customization</h3>
+            <div class="form-group">
+              <label>Receipt Header Banner Text</label>
+              <input type="text" id="setReceiptHeader" placeholder="FreshHarvest Supermarket - Fresh Groceries">
+            </div>
+
+            <div class="form-group">
+              <label>Receipt Footer Note</label>
+              <input type="text" id="setReceiptFooter" placeholder="Thank you for shopping with us! Have a healthy day.">
+            </div>
+          </div>
+
+          <!-- FORM ACTIONS -->
+          <div class="settings-actions">
+            <button type="button" class="btn-secondary" onclick="resetSettingsDefaults()">Reset to Defaults</button>
+            <button type="submit" class="btn-primary">💾 Save Store Settings</button>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <!-- Dedicated JS -->
+  <script src="data-store.js"></script>
+  <script src="store-settings.js" defer></script>
+  <script src="sidebar.js" defer></script>
+</body>
+</html>
