@@ -1,3 +1,5 @@
 {
-  "version": 2
+  "name": "freshharvest-supermarket-pos",
+  "cleanUrls": false,
+  "trailingSlash": false
 }
