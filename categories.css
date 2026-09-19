@@ -46,111 +46,15 @@ body {
   width: 100%;
 }
 
-/* SIDEBAR */
-.sidebar {
-  width: 250px;
-  background-color: var(--bg-sidebar);
-  color: var(--text-white);
+/* CATEGORIES CONTENT & WRAPPER COMPATIBILITY */
+.categories-content {
+  padding: 24px 28px;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
-  padding: 20px 14px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  z-index: 100;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 10px 20px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 12px;
-}
-
-.brand-icon {
-  background: var(--bg-sidebar-active);
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.brand-text h2 {
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  color: #ffffff;
-}
-
-.brand-text p {
-  font-size: 0.72rem;
-  color: #a7f3d0;
-}
-
-.nav-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex-grow: 1;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 9px 14px;
-  border-radius: var(--radius-pill);
-  color: #d1fae5;
-  text-decoration: none;
-  font-size: 0.88rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.nav-link:hover {
-  background-color: var(--bg-sidebar-hover);
-  color: #ffffff;
-}
-
-.nav-link.active {
-  background-color: var(--bg-sidebar-active);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
-}
-
-.nav-icon {
-  font-size: 1.1rem;
-}
-
-.sidebar-promo {
-  margin-top: 15px;
-  background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-  padding: 14px;
-  border-radius: var(--radius-md);
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.promo-leaf {
-  font-size: 1.6rem;
-  margin-bottom: 4px;
-}
-
-.sidebar-promo h4 {
-  font-size: 0.9rem;
-  color: white;
-}
-
-.sidebar-promo p {
-  font-size: 0.72rem;
-  color: #a7f3d0;
+  gap: 24px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* MAIN WRAPPER */
@@ -768,9 +672,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
   .search-wrap {
     width: 100%;
   }
