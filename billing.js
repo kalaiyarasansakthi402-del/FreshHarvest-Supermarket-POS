@@ -569,6 +569,35 @@
     document.getElementById('recCustomerName').textContent = bill.customerName;
     document.getElementById('recPayMethod').textContent = bill.paymentMethod;
     
+    // Dynamic store settings on receipt
+    const settings = (window.DataStore && typeof DataStore.getSettings === 'function')
+      ? DataStore.getSettings()
+      : (typeof getStoreSettings === 'function' ? getStoreSettings() : null);
+
+    if (settings) {
+      const storeName = settings.supermarketName || settings.storeName || 'FreshHarvest Supermarket';
+      const storeNameEl = document.getElementById('recStoreName');
+      if (storeNameEl) storeNameEl.textContent = storeName;
+
+      const addrEl = document.getElementById('recStoreAddress');
+      if (addrEl && settings.address) addrEl.textContent = settings.address;
+
+      const contactEl = document.getElementById('recStoreContact');
+      if (contactEl) {
+        const phone = settings.phone || '+91 98765 43210';
+        const gst = settings.gstin || settings.gstNumber || '29ABCDE1234F1Z5';
+        contactEl.textContent = `Phone: ${phone} | GST: ${gst}`;
+      }
+
+      const footerMsgEl = document.getElementById('recFooterMsg');
+      if (footerMsgEl) footerMsgEl.textContent = `Thank you for shopping at ${storeName}!`;
+
+      const footerSubEl = document.getElementById('recFooterSub');
+      if (footerSubEl) {
+        footerSubEl.textContent = settings.receiptFooter || settings.receiptFooterMessage || `${settings.slogan || settings.tagline || 'Fresh Products • Smart Billing • Better Shopping'} 🌱`;
+      }
+    }
+
     const phoneRow = document.getElementById('recPhoneRow');
     const phoneEl = document.getElementById('recCustomerPhone');
     const normPhone = normalizeIndianMobileNumber(bill.customerPhone);
@@ -604,6 +633,20 @@
     }
   }
 
+  // PDF DOWNLOAD CONTROLLER
+  window.downloadReceiptPDF = function() {
+    const bill = lastCompletedBill;
+    const settings = (window.DataStore && typeof DataStore.getSettings === 'function')
+      ? DataStore.getSettings()
+      : (typeof getStoreSettings === 'function' ? getStoreSettings() : {});
+    const storeName = settings.supermarketName || settings.storeName || 'FreshHarvest';
+    const origTitle = document.title;
+    const billNo = bill ? (bill.billNumber || bill.id) : 'Invoice';
+    document.title = `${billNo}_${storeName.replace(/\s+/g, '_')}`;
+    window.print();
+    setTimeout(() => { document.title = origTitle; }, 1000);
+  };
+
   // CUSTOMER MESSAGING: WHATSAPP & SMS
   window.sendWhatsAppInvoice = function() {
     const bill = lastCompletedBill || (currentCart.length > 0 ? {
@@ -638,11 +681,17 @@
     }
 
     const cleanDigits = normalizedPhone.replace(/\D/g, '');
+    const settings = (window.DataStore && typeof DataStore.getSettings === 'function')
+      ? DataStore.getSettings()
+      : (typeof getStoreSettings === 'function' ? getStoreSettings() : {});
+    const storeName = settings.supermarketName || settings.storeName || 'FreshHarvest Supermarket';
+    const storeSlogan = settings.slogan || settings.tagline || 'Fresh Products • Smart Billing • Better Shopping';
+    const storeFooter = settings.receiptFooter || settings.receiptFooterMessage || `Thank you for shopping at ${storeName}! 🌱`;
 
     // Build receipt message
     let itemsText = (bill.items || []).map(i => `• ${i.name} × ${i.quantity || i.qty} = ${formatCurrency((Number(i.price ?? i.sellingPrice) || 0) * (i.quantity || i.qty))}`).join('\n');
     
-    const message = `🧾 *FreshHarvest Supermarket*\n` +
+    const message = `🧾 *${storeName}*\n` +
       `*Invoice:* ${bill.billNumber || bill.id}\n` +
       `*Date:* ${formatDateTime(bill.date)}\n` +
       `*Customer:* ${bill.customerName}\n` +
@@ -654,8 +703,8 @@
       `*Tax (GST):* +${formatCurrency(bill.tax)}\n` +
       `*Grand Total:* ${formatCurrency(bill.grandTotal)}\n` +
       `*Payment Mode:* ${bill.paymentMethod}\n\n` +
-      `Thank you for shopping at FreshHarvest! 🌱\n` +
-      `Fresh Products • Smart Billing • Better Shopping`;
+      `${storeFooter}\n` +
+      `${storeSlogan}`;
 
     const waUrl = `https://wa.me/${cleanDigits}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
@@ -708,14 +757,20 @@
     const billDate = bill.date ? (typeof bill.date === 'string' && bill.date.includes('T') ? new Date(bill.date).toLocaleDateString('en-IN') : String(bill.date).split(',')[0]) : new Date().toLocaleDateString('en-IN');
     const billTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
-    const smsText = `FreshHarvest Supermarket\n\n` +
+    const settings = (window.DataStore && typeof DataStore.getSettings === 'function')
+      ? DataStore.getSettings()
+      : (typeof getStoreSettings === 'function' ? getStoreSettings() : {});
+    const storeName = settings.supermarketName || settings.storeName || 'FreshHarvest Supermarket';
+    const storeFooter = settings.receiptFooter || settings.receiptFooterMessage || `Thank you for shopping with ${storeName}.`;
+
+    const smsText = `${storeName}\n\n` +
       `Bill: ${bill.billNumber || bill.id}\n` +
       `Customer: ${bill.customerName}\n` +
       `Amount: ${formatCurrency(bill.grandTotal)}\n` +
       `Payment: ${bill.paymentMethod}\n` +
       `Date: ${billDate}\n` +
       `Time: ${billTime}\n\n` +
-      `Thank you for shopping with FreshHarvest.`;
+      `${storeFooter}`;
 
     const smsUrl = `sms:${normalizedPhone}?body=${encodeURIComponent(smsText)}`;
     window.open(smsUrl, '_blank');

@@ -9,15 +9,26 @@ let filteredItems = [];
 
 // STORAGE GETTERS & SETTERS
 function getProducts() {
-  return JSON.parse(localStorage.getItem("pos_products") || "[]");
+  if (window.DataStore && typeof DataStore.getProducts === 'function') {
+    return DataStore.getProducts();
+  }
+  return JSON.parse(localStorage.getItem("freshHarvestProducts") || localStorage.getItem("pos_products") || "[]");
 }
 
 function saveProducts(products) {
-  localStorage.setItem("pos_products", JSON.stringify(products));
+  if (window.DataStore && typeof DataStore.set === 'function') {
+    DataStore.set('PRODUCTS', products);
+  } else {
+    localStorage.setItem("freshHarvestProducts", JSON.stringify(products));
+    localStorage.setItem("pos_products", JSON.stringify(products));
+  }
 }
 
 function getCategories() {
-  return JSON.parse(localStorage.getItem("pos_categories") || "[]");
+  if (window.DataStore && typeof DataStore.getCategories === 'function') {
+    return DataStore.getCategories();
+  }
+  return JSON.parse(localStorage.getItem("freshHarvestCategories") || localStorage.getItem("pos_categories") || "[]");
 }
 
 // POPULATE CATEGORY & BRAND FILTERS
@@ -136,11 +147,32 @@ function renderTable() {
   const tbody = document.getElementById("itemsTableBody");
   if (!tbody) return;
 
+  const products = getProducts();
+  if (products.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="12" style="text-align: center; padding: 60px 20px;">
+          <div style="font-size: 3rem; margin-bottom: 12px;">📋</div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main, #1e293b); margin-bottom: 8px;">No Supermarket Items Yet</h3>
+          <p style="color: var(--text-muted, #64748b); font-size: 0.92rem; max-width: 440px; margin: 0 auto 20px auto;">
+            Add your first supermarket item to track inventory, variants, discounts and pricing.
+          </p>
+          <button class="btn-primary" onclick="openAddItemModal()" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; font-weight: 700; cursor: pointer;">
+            + Add New Item
+          </button>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
   if (filteredItems.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="12" style="text-align: center; padding: 40px; color: var(--text-muted);">
-          No supermarket items found matching the selected criteria.
+        <td colspan="12" style="text-align: center; padding: 48px 20px;">
+          <div style="font-size: 2.2rem; margin-bottom: 8px;">🔍</div>
+          <h4 style="font-weight: 700; color: var(--text-main, #334155); margin-bottom: 6px;">No matching items found</h4>
+          <p style="color: var(--text-muted, #94a3b8); font-size: 0.88rem;">Try adjusting your search keywords, category, brand, or status filters.</p>
         </td>
       </tr>
     `;
@@ -194,9 +226,9 @@ function renderTable() {
         <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
         <td>
           <div class="action-btns">
-            <button class="btn-icon-view" onclick="viewItemDetails(${p.id})">View</button>
-            <button class="btn-icon-edit" onclick="openEditItemModal(${p.id})">Edit</button>
-            <button class="btn-icon-del" onclick="deleteItem(${p.id})">Delete</button>
+            <button class="btn-icon-view" onclick="viewItemDetails('${p.id}')">View</button>
+            <button class="btn-icon-edit" onclick="openEditItemModal('${p.id}')">Edit</button>
+            <button class="btn-icon-del" onclick="deleteItem('${p.id}')">Delete</button>
           </div>
         </td>
       </tr>
@@ -287,54 +319,177 @@ function autoCalculateDiscount() {
   }
 }
 
+let currentItemImage = null;
+
+function handleItemImageUpload(event) {
+  const fileInput = event.target;
+  const errorBox = document.getElementById("itemImageError");
+  if (errorBox) {
+    errorBox.style.display = "none";
+    errorBox.textContent = "";
+  }
+
+  if (!fileInput.files || fileInput.files.length === 0) return;
+
+  const file = fileInput.files[0];
+
+  // Validate File Type
+  const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+  if (!validTypes.includes(file.type.toLowerCase())) {
+    if (errorBox) {
+      errorBox.textContent = "Please upload a valid image file (JPG, JPEG, PNG, or WEBP).";
+      errorBox.style.display = "block";
+    }
+    fileInput.value = "";
+    return;
+  }
+
+  // Validate File Size (2 MB = 2 * 1024 * 1024 bytes)
+  const maxSize = 2 * 1024 * 1024;
+  if (file.size > maxSize) {
+    if (errorBox) {
+      errorBox.textContent = "Please upload an image smaller than 2 MB.";
+      errorBox.style.display = "block";
+    }
+    fileInput.value = "";
+    return;
+  }
+
+  // Read File as Base64 Data URL using FileReader
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    currentItemImage = e.target.result;
+    showItemImagePreview(currentItemImage);
+  };
+  reader.readAsDataURL(file);
+}
+
+function showItemImagePreview(src) {
+  const container = document.getElementById("itemImagePreviewContainer");
+  const thumb = document.getElementById("itemImagePreviewThumb");
+  if (container && thumb) {
+    thumb.src = src;
+    container.style.display = "block";
+  }
+}
+
+function removeItemImage() {
+  currentItemImage = "";
+  const fileInput = document.getElementById("inputItemFile");
+  if (fileInput) fileInput.value = "";
+  const container = document.getElementById("itemImagePreviewContainer");
+  if (container) container.style.display = "none";
+  const errorBox = document.getElementById("itemImageError");
+  if (errorBox) errorBox.style.display = "none";
+}
+
 // ADD ITEM MODAL
 function openAddItemModal() {
-  document.getElementById("itemModalTitle").textContent = "Add New Supermarket Item";
-  document.getElementById("btnSaveItem").textContent = "Add Item";
-  document.getElementById("itemForm").reset();
-  document.getElementById("editItemId").value = "";
-  document.getElementById("modalValidationError").style.display = "none";
+  const modal = document.getElementById("itemModal");
+  if (!modal) {
+    console.error("❌ Add Item modal not found: #itemModal");
+    return;
+  }
 
-  // Defaults
-  document.getElementById("inputItemUnit").value = "1 kg";
-  document.getElementById("inputItemBrand").value = "FreshHarvest";
-  document.getElementById("inputItemVariant").value = "Regular";
-  document.getElementById("inputItemStock").value = "50";
-  document.getElementById("inputItemStatus").value = "In Stock";
-  document.getElementById("inputItemImage").value = "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80";
+  const titleEl = document.getElementById("itemModalTitle");
+  if (titleEl) titleEl.textContent = "Add New Supermarket Item";
 
-  document.getElementById("itemModal")?.classList.add("active");
+  const saveBtn = document.getElementById("btnSaveItem");
+  if (saveBtn) saveBtn.textContent = "💾 Save Item";
+
+  const form = document.getElementById("itemForm");
+  if (form) form.reset();
+
+  const editId = document.getElementById("editItemId");
+  if (editId) editId.value = "";
+
+  const valError = document.getElementById("modalValidationError");
+  if (valError) {
+    valError.style.display = "none";
+    valError.textContent = "";
+  }
+
+  // Safe defaults
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  };
+
+  setVal("inputItemUnit", "1 kg");
+  setVal("inputItemBrand", "FreshHarvest");
+  setVal("inputItemVariant", "Regular");
+  setVal("inputItemStock", "50");
+  setVal("inputItemStatus", "In Stock");
+
+  removeItemImage();
+
+  modal.classList.add("active");
+  modal.style.display = "flex";
+  document.body.classList.add("modal-open");
+
+  setTimeout(() => {
+    document.getElementById("inputItemName")?.focus();
+  }, 50);
 }
 
 // EDIT ITEM MODAL
 function openEditItemModal(id) {
   const products = getProducts();
-  const item = products.find(p => p.id === id);
+  const item = products.find(p => String(p.id) === String(id) || p.id == id);
   if (!item) return;
 
-  document.getElementById("itemModalTitle").textContent = "Edit Supermarket Item";
-  document.getElementById("btnSaveItem").textContent = "Save Changes";
-  document.getElementById("modalValidationError").style.display = "none";
+  const modal = document.getElementById("itemModal");
+  if (!modal) return;
 
-  document.getElementById("editItemId").value = item.id;
-  document.getElementById("inputItemName").value = item.name;
-  document.getElementById("inputItemCategory").value = item.category;
-  document.getElementById("inputItemBrand").value = item.brand || "FreshHarvest";
-  document.getElementById("inputItemVariant").value = item.variant || "Regular";
-  document.getElementById("inputItemUnit").value = item.unit || "1 unit";
-  document.getElementById("inputItemPrice").value = item.price;
-  document.getElementById("inputItemMRP").value = item.mrp || item.oldPrice || (item.price * 1.25);
-  document.getElementById("inputItemDiscount").value = item.discount || 0;
-  document.getElementById("inputItemStock").value = item.stock;
-  document.getElementById("inputItemStatus").value = item.status || (item.stock > 0 ? "In Stock" : "Out of Stock");
-  document.getElementById("inputItemImage").value = item.image || "";
-  document.getElementById("inputItemDesc").value = item.description || "";
+  const titleEl = document.getElementById("itemModalTitle");
+  if (titleEl) titleEl.textContent = "Edit Supermarket Item";
 
-  document.getElementById("itemModal")?.classList.add("active");
+  const saveBtn = document.getElementById("btnSaveItem");
+  if (saveBtn) saveBtn.textContent = "💾 Save Changes";
+
+  const valError = document.getElementById("modalValidationError");
+  if (valError) {
+    valError.style.display = "none";
+    valError.textContent = "";
+  }
+
+  const setVal = (elId, val) => {
+    const el = document.getElementById(elId);
+    if (el) el.value = val !== undefined && val !== null ? val : "";
+  };
+
+  setVal("editItemId", item.id);
+  setVal("inputItemName", item.name);
+  setVal("inputItemCategory", item.category);
+  setVal("inputItemBrand", item.brand || "FreshHarvest");
+  setVal("inputItemVariant", item.variant || "Regular");
+  setVal("inputItemUnit", item.unit || "1 unit");
+  setVal("inputItemPrice", item.price !== undefined ? item.price : item.sellingPrice);
+  setVal("inputItemMRP", item.mrp || item.oldPrice || ((item.price || item.sellingPrice || 0) * 1.25));
+  setVal("inputItemDiscount", item.discount || 0);
+  setVal("inputItemStock", item.stock !== undefined ? item.stock : item.stockQty);
+  setVal("inputItemStatus", item.status || ((item.stock || item.stockQty || 0) > 0 ? "In Stock" : "Out of Stock"));
+  setVal("inputItemDesc", item.description || "");
+
+  if (item.image) {
+    currentItemImage = item.image;
+    showItemImagePreview(item.image);
+  } else {
+    removeItemImage();
+  }
+
+  modal.classList.add("active");
+  modal.style.display = "flex";
+  document.body.classList.add("modal-open");
 }
 
 function closeItemModal() {
-  document.getElementById("itemModal")?.classList.remove("active");
+  const modal = document.getElementById("itemModal");
+  if (modal) {
+    modal.classList.remove("active");
+    modal.style.display = "none";
+  }
+  document.body.classList.remove("modal-open");
 }
 
 // FORM SUBMISSION & VALIDATION
@@ -347,7 +502,6 @@ function handleItemFormSubmit(e) {
   const products = getProducts();
   const editIdStr = document.getElementById("editItemId").value;
   const isEditing = Boolean(editIdStr);
-  const editId = isEditing ? parseInt(editIdStr, 10) : null;
 
   const name = document.getElementById("inputItemName").value.trim();
   const category = document.getElementById("inputItemCategory").value.trim();
@@ -359,7 +513,7 @@ function handleItemFormSubmit(e) {
   const discount = parseInt(document.getElementById("inputItemDiscount").value, 10) || 0;
   const stock = parseInt(document.getElementById("inputItemStock").value, 10);
   let status = document.getElementById("inputItemStatus").value;
-  const image = document.getElementById("inputItemImage").value.trim() || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80";
+  const image = currentItemImage || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80";
   const description = document.getElementById("inputItemDesc").value.trim();
 
   // VALIDATION RULES
@@ -380,14 +534,12 @@ function handleItemFormSubmit(e) {
     return;
   }
 
-  const nextId = isEditing ? editId : (products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1);
-
   // Stock status sync
   if (stock <= 0) status = "Out of Stock";
   else if (stock <= 10 && status === "In Stock") status = "Low Stock";
 
   if (isEditing) {
-    const idx = products.findIndex(p => p.id === editId);
+    const idx = products.findIndex(p => String(p.id) === String(editIdStr) || p.id == editIdStr);
     if (idx !== -1) {
       products[idx] = {
         ...products[idx],
@@ -396,10 +548,12 @@ function handleItemFormSubmit(e) {
         brand,
         variant,
         unit,
-        price,
-        mrp,
-        discount,
-        stock,
+        price: Number(price),
+        sellingPrice: Number(price),
+        mrp: Number(mrp),
+        discount: Number(discount),
+        stock: Number(stock),
+        stockQty: Number(stock),
         status,
         image,
         description
@@ -407,31 +561,35 @@ function handleItemFormSubmit(e) {
     }
   } else {
     products.unshift({
-      id: nextId,
+      id: "prod-" + Date.now(),
       name,
       category,
       brand,
       variant,
       unit,
-      price,
-      cost: (price * 0.7).toFixed(2),
-      mrp,
-      discount,
-      stock,
+      price: Number(price),
+      sellingPrice: Number(price),
+      cost: Number((price * 0.7).toFixed(2)),
+      costPrice: Number((price * 0.7).toFixed(2)),
+      mrp: Number(mrp),
+      discount: Number(discount),
+      stock: Number(stock),
+      stockQty: Number(stock),
       minStock: 10,
       status,
       image,
-      description,
-      featured: false,
-      flashDeal: false
+      description
     });
   }
 
   saveProducts(products);
   closeItemModal();
-  populateFilterDropdowns();
   updateSummaryCards();
   applyFiltersAndSearch();
+
+  // Notify other modules / POS billing
+  window.dispatchEvent(new CustomEvent('freshHarvestDataUpdated', { detail: { key: 'PRODUCTS', data: products } }));
+  window.dispatchEvent(new CustomEvent('freshHarvestProductsUpdated', { detail: products }));
 }
 
 function showValidationError(msg) {
@@ -445,7 +603,7 @@ function showValidationError(msg) {
 // VIEW ITEM MODAL
 function viewItemDetails(id) {
   const products = getProducts();
-  const item = products.find(p => p.id === id);
+  const item = products.find(p => String(p.id) === String(id) || p.id == id);
   if (!item) return;
 
   const brand = item.brand || "FreshHarvest";
@@ -519,11 +677,11 @@ function closeViewItemModal() {
 // DELETE ITEM
 function deleteItem(id) {
   const products = getProducts();
-  const item = products.find(p => p.id === id);
+  const item = products.find(p => String(p.id) === String(id) || p.id == id);
   if (!item) return;
 
   if (confirm(`Are you sure you want to permanently delete item "${item.name}"?`)) {
-    const updated = products.filter(p => p.id !== id);
+    const updated = products.filter(p => String(p.id) !== String(id) && p.id != id);
     saveProducts(updated);
     updateSummaryCards();
     applyFiltersAndSearch();
@@ -536,9 +694,31 @@ document.addEventListener("DOMContentLoaded", () => {
   updateSummaryCards();
   applyFiltersAndSearch();
 
+  // Connect Add Item Button
+  const addItemBtn = document.getElementById("addItemBtn") || document.querySelector(".btn-add-item");
+  if (addItemBtn) {
+    addItemBtn.removeEventListener("click", openAddItemModal);
+    addItemBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      openAddItemModal();
+    });
+    console.log("✅ Add Item button connected");
+  } else {
+    console.error("❌ Add Item button not found");
+  }
+
   // Search input live listener
   document.getElementById("itemSearchInput")?.addEventListener("input", () => {
     currentPage = 1;
     applyFiltersAndSearch();
   });
 });
+
+// Expose global methods
+window.openAddItemModal = openAddItemModal;
+window.openEditItemModal = openEditItemModal;
+window.closeItemModal = closeItemModal;
+window.handleItemFormSubmit = handleItemFormSubmit;
+window.viewItemDetails = viewItemDetails;
+window.closeViewItemModal = closeViewItemModal;
+window.deleteItem = deleteItem;

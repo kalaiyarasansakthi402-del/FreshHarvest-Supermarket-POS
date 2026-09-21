@@ -266,9 +266,9 @@
 
       <div class="receipt-content" id="printableInvoice">
         <div class="receipt-header-text">
-          <h2>FreshHarvest Supermarket</h2>
-          <p>Shop #14, Green Valley High Street, Bengaluru</p>
-          <p>Phone: +91 98765 43210 | GST: 29ABCDE1234F1Z5</p>
+          <h2 id="invStoreName">FreshHarvest Supermarket</h2>
+          <p id="invStoreAddress">Shop #14, Green Valley High Street, Bengaluru</p>
+          <p id="invStoreContact">Phone: +91 98765 43210 | GST: 29ABCDE1234F1Z5</p>
           <div class="receipt-divider"></div>
           <div class="receipt-meta-row">
             <span>Bill No: <strong id="invNo">FH-1091</strong></span>
@@ -308,14 +308,15 @@
         </div>
 
         <div class="receipt-footer-text">
-          <p>Thank you for shopping at FreshHarvest Supermarket!</p>
-          <p>Fresh Products • Smart Billing • Better Shopping 🌱</p>
+          <p id="invFooterMsg">Thank you for shopping at FreshHarvest Supermarket!</p>
+          <p id="invFooterSub">Fresh Products • Smart Billing • Better Shopping 🌱</p>
         </div>
       </div>
       <div class="modal-footer" style="justify-content: space-between;">
         <button class="btn-secondary" onclick="closeInvoiceModal()">Close</button>
         <div style="display: flex; gap: 8px;">
           <button class="btn-secondary" style="color: #ef4444; border-color: #fca5a5;" onclick="processReturnForActiveBill()">↩️ Issue Refund</button>
+          <button type="button" class="btn-secondary" id="btnDownloadInvPdf" onclick="downloadInvoicePdf()">📄 Download PDF</button>
           <button class="btn-primary" onclick="window.print()">🖨️ Print Invoice</button>
         </div>
       </div>

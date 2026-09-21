@@ -488,9 +488,6 @@ body {
   border-color: var(--color-primary);
 }
 
-/* MODAL */
-.modal-overlay {
-  position: fixed;
 /* MODAL OVERLAY & CONTAINER */
 body.modal-open {
   overflow: hidden !important;
@@ -510,7 +507,7 @@ body.modal-open {
 }
 
 .modal-overlay.active {
-  display: flex;
+  display: flex !important;
 }
 
 .modal-card {

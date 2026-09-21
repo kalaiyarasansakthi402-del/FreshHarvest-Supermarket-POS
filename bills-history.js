@@ -134,6 +134,26 @@
 
     activeViewedBill = bill;
 
+    const settings = (window.DataStore && typeof DataStore.getSettings === 'function')
+      ? DataStore.getSettings()
+      : (typeof getStoreSettings === 'function' ? getStoreSettings() : {});
+    const storeName = settings.supermarketName || settings.storeName || 'FreshHarvest Supermarket';
+    const storeAddress = settings.address || 'Shop #14, Green Valley High Street, Bengaluru';
+    const storeContact = `Phone: ${settings.contactPhone || settings.phone || '+91 98765 43210'} | GST: ${settings.gstin || settings.gstNumber || '29ABCDE1234F1Z5'}`;
+    const storeSlogan = settings.slogan || settings.tagline || 'Fresh Products • Smart Billing • Better Shopping 🌱';
+    const storeFooter = settings.receiptFooter || settings.receiptFooterMessage || `Thank you for shopping at ${storeName}!`;
+
+    const invStoreName = document.getElementById('invStoreName');
+    if (invStoreName) invStoreName.textContent = storeName;
+    const invStoreAddress = document.getElementById('invStoreAddress');
+    if (invStoreAddress) invStoreAddress.textContent = storeAddress;
+    const invStoreContact = document.getElementById('invStoreContact');
+    if (invStoreContact) invStoreContact.textContent = storeContact;
+    const invFooterMsg = document.getElementById('invFooterMsg');
+    if (invFooterMsg) invFooterMsg.textContent = storeFooter;
+    const invFooterSub = document.getElementById('invFooterSub');
+    if (invFooterSub) invFooterSub.textContent = storeSlogan;
+
     document.getElementById('invNo').textContent = bill.billNumber || bill.id;
     document.getElementById('invDateTime').textContent = formatDateTime(bill.date);
     document.getElementById('invCustomer').textContent = bill.customerName || 'Walk-in Customer';
@@ -162,8 +182,8 @@
         <tr>
           <td>${item.name}</td>
           <td>${item.quantity || item.qty || 1}</td>
-          <td>${formatCurrency(item.price)}</td>
-          <td>${formatCurrency((item.price * (item.quantity || item.qty || 1)))}</td>
+          <td>${formatCurrency(item.price ?? item.sellingPrice ?? 0)}</td>
+          <td>${formatCurrency(((item.price ?? item.sellingPrice ?? 0) * (item.quantity || item.qty || 1)))}</td>
         </tr>
       `).join('');
     }
@@ -174,6 +194,60 @@
   window.closeInvoiceModal = function() {
     document.getElementById('viewInvoiceModal')?.classList.remove('active');
     activeViewedBill = null;
+  };
+
+  window.downloadInvoicePdf = function() {
+    if (!activeViewedBill) {
+      showToast('⚠️ No invoice available to download.', 'warning', 'Download PDF');
+      return;
+    }
+
+    const prevTitle = document.title;
+    const billNum = activeViewedBill.billNumber || activeViewedBill.id || 'Invoice';
+    document.title = `${billNum}-receipt`;
+
+    const printStyles = document.createElement('style');
+    printStyles.id = 'temp-invoice-pdf-styles';
+    printStyles.innerHTML = `
+      @media print {
+        body * { visibility: hidden !important; }
+        #viewInvoiceModal, #viewInvoiceModal *, #printableInvoice, #printableInvoice * { visibility: visible !important; }
+        #viewInvoiceModal {
+          position: fixed !important;
+          left: 0 !important;
+          top: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          background: white !important;
+          display: flex !important;
+          justify-content: center !important;
+          align-items: flex-start !important;
+          padding-top: 10px !important;
+          box-shadow: none !important;
+        }
+        .modal-header, .receipt-messaging-actions, .modal-footer {
+          display: none !important;
+        }
+        #printableInvoice {
+          position: absolute !important;
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          width: 320px !important;
+          max-width: 100% !important;
+          box-shadow: none !important;
+          border: none !important;
+        }
+      }
+    `;
+    document.head.appendChild(printStyles);
+
+    window.print();
+
+    setTimeout(() => {
+      document.title = prevTitle;
+      const el = document.getElementById('temp-invoice-pdf-styles');
+      if (el) el.remove();
+    }, 1000);
   };
 
   window.sendInvoiceWhatsApp = function() {
@@ -192,9 +266,16 @@
 
     if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
 
-    let itemsText = bill.items.map(i => `• ${i.name} × ${i.quantity || i.qty || 1} = ${formatCurrency(i.price * (i.quantity || i.qty || 1))}`).join('\n');
+    const settings = (window.DataStore && typeof DataStore.getSettings === 'function')
+      ? DataStore.getSettings()
+      : (typeof getStoreSettings === 'function' ? getStoreSettings() : {});
+    const storeName = settings.supermarketName || settings.storeName || 'FreshHarvest Supermarket';
+    const storeSlogan = settings.slogan || settings.tagline || 'Fresh Products • Smart Billing • Better Shopping';
+    const storeFooter = settings.receiptFooter || settings.receiptFooterMessage || `Thank you for shopping at ${storeName}! 🌱`;
+
+    let itemsText = bill.items.map(i => `• ${i.name} × ${i.quantity || i.qty || 1} = ${formatCurrency((i.price ?? i.sellingPrice ?? 0) * (i.quantity || i.qty || 1))}`).join('\n');
     
-    const message = `🧾 *FreshHarvest Supermarket*\n` +
+    const message = `🧾 *${storeName}*\n` +
       `*Invoice:* ${bill.billNumber || bill.id}\n` +
       `*Date:* ${formatDateTime(bill.date)}\n` +
       `*Customer:* ${bill.customerName}\n` +
@@ -203,8 +284,8 @@
       `--------------------------------\n` +
       `*Grand Total:* ${formatCurrency(bill.grandTotal)}\n` +
       `*Payment Mode:* ${bill.paymentMethod}\n\n` +
-      `Thank you for shopping at FreshHarvest! 🌱\n` +
-      `Fresh Products • Smart Billing • Better Shopping`;
+      `${storeFooter}\n` +
+      `${storeSlogan}`;
 
     const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
@@ -238,7 +319,12 @@
       cleanPhone = phone.replace(/[^0-9]/g, '');
     }
 
-    const smsText = `FreshHarvest Bill #${bill.billNumber || bill.id}: Total ${formatCurrency(bill.grandTotal)} paid via ${bill.paymentMethod}. Thank you for shopping with us!`;
+    const settings = (window.DataStore && typeof DataStore.getSettings === 'function')
+      ? DataStore.getSettings()
+      : (typeof getStoreSettings === 'function' ? getStoreSettings() : {});
+    const storeName = settings.supermarketName || settings.storeName || 'FreshHarvest Supermarket';
+
+    const smsText = `${storeName} Bill #${bill.billNumber || bill.id}: Total ${formatCurrency(bill.grandTotal)} paid via ${bill.paymentMethod}. Thank you for shopping with us!`;
     window.open(`sms:${cleanPhone}?body=${encodeURIComponent(smsText)}`, '_blank');
 
     if (window.DataStore) {
@@ -249,11 +335,11 @@
         billId: bill.billNumber || bill.id,
         amount: bill.grandTotal,
         text: smsText,
-        status: 'Sent'
+        status: 'OPENED_COMPOSER'
       });
     }
 
-    showToast(`SMS opened for +${cleanPhone}!`, 'info', 'SMS Invoice');
+    showToast('ℹ️ SMS app opened. Please review and send the message.', 'info', 'SMS Invoice');
   };
 
   window.processReturnForActiveBill = function() {

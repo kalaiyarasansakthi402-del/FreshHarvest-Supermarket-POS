@@ -385,22 +385,51 @@ function removeItemImage() {
 
 // ADD ITEM MODAL
 function openAddItemModal() {
-  document.getElementById("itemModalTitle").textContent = "Add New Supermarket Item";
-  document.getElementById("btnSaveItem").textContent = "Add Item";
-  document.getElementById("itemForm").reset();
-  document.getElementById("editItemId").value = "";
-  document.getElementById("modalValidationError").style.display = "none";
+  const modal = document.getElementById("itemModal");
+  if (!modal) {
+    console.error("❌ Add Item modal not found: #itemModal");
+    return;
+  }
 
-  // Defaults
-  document.getElementById("inputItemUnit").value = "1 kg";
-  document.getElementById("inputItemBrand").value = "FreshHarvest";
-  document.getElementById("inputItemVariant").value = "Regular";
-  document.getElementById("inputItemStock").value = "50";
-  document.getElementById("inputItemStatus").value = "In Stock";
-  
+  const titleEl = document.getElementById("itemModalTitle");
+  if (titleEl) titleEl.textContent = "Add New Supermarket Item";
+
+  const saveBtn = document.getElementById("btnSaveItem");
+  if (saveBtn) saveBtn.textContent = "💾 Save Item";
+
+  const form = document.getElementById("itemForm");
+  if (form) form.reset();
+
+  const editId = document.getElementById("editItemId");
+  if (editId) editId.value = "";
+
+  const valError = document.getElementById("modalValidationError");
+  if (valError) {
+    valError.style.display = "none";
+    valError.textContent = "";
+  }
+
+  // Safe defaults
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  };
+
+  setVal("inputItemUnit", "1 kg");
+  setVal("inputItemBrand", "FreshHarvest");
+  setVal("inputItemVariant", "Regular");
+  setVal("inputItemStock", "50");
+  setVal("inputItemStatus", "In Stock");
+
   removeItemImage();
 
-  document.getElementById("itemModal")?.classList.add("active");
+  modal.classList.add("active");
+  modal.style.display = "flex";
+  document.body.classList.add("modal-open");
+
+  setTimeout(() => {
+    document.getElementById("inputItemName")?.focus();
+  }, 50);
 }
 
 // EDIT ITEM MODAL
@@ -409,22 +438,38 @@ function openEditItemModal(id) {
   const item = products.find(p => String(p.id) === String(id) || p.id == id);
   if (!item) return;
 
-  document.getElementById("itemModalTitle").textContent = "Edit Supermarket Item";
-  document.getElementById("btnSaveItem").textContent = "Save Changes";
-  document.getElementById("modalValidationError").style.display = "none";
+  const modal = document.getElementById("itemModal");
+  if (!modal) return;
 
-  document.getElementById("editItemId").value = item.id;
-  document.getElementById("inputItemName").value = item.name;
-  document.getElementById("inputItemCategory").value = item.category;
-  document.getElementById("inputItemBrand").value = item.brand || "FreshHarvest";
-  document.getElementById("inputItemVariant").value = item.variant || "Regular";
-  document.getElementById("inputItemUnit").value = item.unit || "1 unit";
-  document.getElementById("inputItemPrice").value = item.price;
-  document.getElementById("inputItemMRP").value = item.mrp || item.oldPrice || (item.price * 1.25);
-  document.getElementById("inputItemDiscount").value = item.discount || 0;
-  document.getElementById("inputItemStock").value = item.stock;
-  document.getElementById("inputItemStatus").value = item.status || (item.stock > 0 ? "In Stock" : "Out of Stock");
-  document.getElementById("inputItemDesc").value = item.description || "";
+  const titleEl = document.getElementById("itemModalTitle");
+  if (titleEl) titleEl.textContent = "Edit Supermarket Item";
+
+  const saveBtn = document.getElementById("btnSaveItem");
+  if (saveBtn) saveBtn.textContent = "💾 Save Changes";
+
+  const valError = document.getElementById("modalValidationError");
+  if (valError) {
+    valError.style.display = "none";
+    valError.textContent = "";
+  }
+
+  const setVal = (elId, val) => {
+    const el = document.getElementById(elId);
+    if (el) el.value = val !== undefined && val !== null ? val : "";
+  };
+
+  setVal("editItemId", item.id);
+  setVal("inputItemName", item.name);
+  setVal("inputItemCategory", item.category);
+  setVal("inputItemBrand", item.brand || "FreshHarvest");
+  setVal("inputItemVariant", item.variant || "Regular");
+  setVal("inputItemUnit", item.unit || "1 unit");
+  setVal("inputItemPrice", item.price !== undefined ? item.price : item.sellingPrice);
+  setVal("inputItemMRP", item.mrp || item.oldPrice || ((item.price || item.sellingPrice || 0) * 1.25));
+  setVal("inputItemDiscount", item.discount || 0);
+  setVal("inputItemStock", item.stock !== undefined ? item.stock : item.stockQty);
+  setVal("inputItemStatus", item.status || ((item.stock || item.stockQty || 0) > 0 ? "In Stock" : "Out of Stock"));
+  setVal("inputItemDesc", item.description || "");
 
   if (item.image) {
     currentItemImage = item.image;
@@ -433,11 +478,18 @@ function openEditItemModal(id) {
     removeItemImage();
   }
 
-  document.getElementById("itemModal")?.classList.add("active");
+  modal.classList.add("active");
+  modal.style.display = "flex";
+  document.body.classList.add("modal-open");
 }
 
 function closeItemModal() {
-  document.getElementById("itemModal")?.classList.remove("active");
+  const modal = document.getElementById("itemModal");
+  if (modal) {
+    modal.classList.remove("active");
+    modal.style.display = "none";
+  }
+  document.body.classList.remove("modal-open");
 }
 
 // FORM SUBMISSION & VALIDATION
@@ -496,10 +548,12 @@ function handleItemFormSubmit(e) {
         brand,
         variant,
         unit,
-        price,
-        mrp,
-        discount,
-        stock,
+        price: Number(price),
+        sellingPrice: Number(price),
+        mrp: Number(mrp),
+        discount: Number(discount),
+        stock: Number(stock),
+        stockQty: Number(stock),
         status,
         image,
         description
@@ -513,11 +567,14 @@ function handleItemFormSubmit(e) {
       brand,
       variant,
       unit,
-      price,
-      cost: (price * 0.7).toFixed(2),
-      mrp,
-      discount,
-      stock,
+      price: Number(price),
+      sellingPrice: Number(price),
+      cost: Number((price * 0.7).toFixed(2)),
+      costPrice: Number((price * 0.7).toFixed(2)),
+      mrp: Number(mrp),
+      discount: Number(discount),
+      stock: Number(stock),
+      stockQty: Number(stock),
       minStock: 10,
       status,
       image,
@@ -529,6 +586,10 @@ function handleItemFormSubmit(e) {
   closeItemModal();
   updateSummaryCards();
   applyFiltersAndSearch();
+
+  // Notify other modules / POS billing
+  window.dispatchEvent(new CustomEvent('freshHarvestDataUpdated', { detail: { key: 'PRODUCTS', data: products } }));
+  window.dispatchEvent(new CustomEvent('freshHarvestProductsUpdated', { detail: products }));
 }
 
 function showValidationError(msg) {
@@ -633,9 +694,31 @@ document.addEventListener("DOMContentLoaded", () => {
   updateSummaryCards();
   applyFiltersAndSearch();
 
+  // Connect Add Item Button
+  const addItemBtn = document.getElementById("addItemBtn") || document.querySelector(".btn-add-item");
+  if (addItemBtn) {
+    addItemBtn.removeEventListener("click", openAddItemModal);
+    addItemBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      openAddItemModal();
+    });
+    console.log("✅ Add Item button connected");
+  } else {
+    console.error("❌ Add Item button not found");
+  }
+
   // Search input live listener
   document.getElementById("itemSearchInput")?.addEventListener("input", () => {
     currentPage = 1;
     applyFiltersAndSearch();
   });
 });
+
+// Expose global methods
+window.openAddItemModal = openAddItemModal;
+window.openEditItemModal = openEditItemModal;
+window.closeItemModal = closeItemModal;
+window.handleItemFormSubmit = handleItemFormSubmit;
+window.viewItemDetails = viewItemDetails;
+window.closeViewItemModal = closeViewItemModal;
+window.deleteItem = deleteItem;

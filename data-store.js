@@ -20,7 +20,7 @@
     OFFERS: 'freshHarvestOffers',
     LOYALTY: 'freshHarvestLoyalty',
     STAFF: 'freshHarvestStaff',
-    SETTINGS: 'freshHarvestSettings',
+    SETTINGS: 'freshHarvestStoreSettings',
     ALERTS: 'freshHarvestAlerts',
     MESSAGES: 'freshHarvestMessages',
     SHIFTS: 'freshHarvestShifts',
@@ -35,7 +35,8 @@
     SUPPLIERS: 'pos_suppliers',
     PURCHASES: 'pos_purchases',
     RETURNS: 'pos_returns',
-    SETTINGS: 'pos_settings'
+    SETTINGS: 'freshHarvestSettings',
+    POS_SETTINGS: 'pos_settings'
   };
 
   // Helper for consistent Date Formatting: DD MMM YYYY, hh:mm A
@@ -235,15 +236,24 @@
 
   // DEFAULT SEED DATA
   const DEFAULT_SETTINGS = {
+    supermarketName: 'FreshHarvest Supermarket',
     storeName: 'FreshHarvest Supermarket',
+    slogan: 'Fresh Products • Smart Billing • Better Shopping',
     tagline: 'Fresh Products • Smart Billing • Better Shopping',
     address: 'Shop #14, Green Valley High Street, Bengaluru, Karnataka 560001',
     phone: '+91 98765 43210',
     email: 'contact@freshharvest.store',
+    gstin: '29ABCDE1234F1Z5',
     gstNumber: '29ABCDE1234F1Z5',
+    currencySymbol: '₹',
     currency: '₹',
+    defaultGstRate: 5.0,
     taxRate: 5.0,
+    loyaltyPointsRatio: 10,
+    pointsRatio: 10,
     lowStockDefaultThreshold: 5,
+    receiptHeader: 'FreshHarvest Supermarket - Quality Groceries',
+    receiptFooter: 'Thank you for shopping at FreshHarvest! Healthy Food, Healthy Life.',
     receiptFooterMessage: 'Thank you for shopping at FreshHarvest! Healthy Food, Healthy Life.',
     enableAudioAlerts: true,
     autoPrintReceipt: false
@@ -941,9 +951,78 @@
         localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(DEFAULT_CATEGORIES));
       }
 
-      // Settings
-      if (!localStorage.getItem(STORAGE_KEYS.SETTINGS)) {
-        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
+      // Settings — Non-destructive initialization: NEVER overwrite existing user settings!
+      const canonicalRaw = localStorage.getItem('freshHarvestStoreSettings');
+      let canonicalValid = false;
+      if (canonicalRaw) {
+        try {
+          const parsedCanonical = JSON.parse(canonicalRaw);
+          if (parsedCanonical && typeof parsedCanonical === 'object') {
+            canonicalValid = true;
+            // Mirror to legacy keys for full backward compatibility if not present
+            if (!localStorage.getItem('freshHarvestSettings')) {
+              localStorage.setItem('freshHarvestSettings', canonicalRaw);
+            }
+            if (!localStorage.getItem('pos_settings')) {
+              localStorage.setItem('pos_settings', canonicalRaw);
+            }
+          }
+        } catch (e) {
+          canonicalValid = false;
+        }
+      }
+
+      if (!canonicalValid) {
+        // Canonical is not present or invalid. Check legacy keys in priority order:
+        const legacyRaw = localStorage.getItem('freshHarvestSettings') || localStorage.getItem('pos_settings');
+        if (legacyRaw) {
+          try {
+            const parsed = JSON.parse(legacyRaw);
+            if (parsed && typeof parsed === 'object') {
+              const name = (parsed.supermarketName || parsed.storeName || DEFAULT_SETTINGS.supermarketName || '').trim();
+              const slogan = (parsed.slogan || parsed.tagline || DEFAULT_SETTINGS.slogan || '').trim();
+              const address = (parsed.address !== undefined ? parsed.address : DEFAULT_SETTINGS.address || '').trim();
+              const phone = (parsed.phone !== undefined ? parsed.phone : DEFAULT_SETTINGS.phone || '').trim();
+              const email = (parsed.email !== undefined ? parsed.email : DEFAULT_SETTINGS.email || '').trim();
+              const gstin = (parsed.gstin || parsed.gstNumber || DEFAULT_SETTINGS.gstin || '').trim();
+              const tax = parsed.defaultGstRate !== undefined ? Number(parsed.defaultGstRate) : (parsed.taxRate !== undefined ? Number(parsed.taxRate) : DEFAULT_SETTINGS.defaultGstRate);
+              const curr = (parsed.currencySymbol || parsed.currency || DEFAULT_SETTINGS.currencySymbol || '₹').trim();
+              const pts = parsed.loyaltyPointsRatio !== undefined ? Number(parsed.loyaltyPointsRatio) : (parsed.pointsRatio !== undefined ? Number(parsed.pointsRatio) : DEFAULT_SETTINGS.loyaltyPointsRatio);
+
+              const canonical = {
+                ...DEFAULT_SETTINGS,
+                ...parsed,
+                supermarketName: name,
+                storeName: name,
+                slogan: slogan,
+                tagline: slogan,
+                address: address,
+                phone: phone,
+                email: email,
+                gstin: gstin,
+                gstNumber: gstin,
+                defaultGstRate: isNaN(tax) ? 5 : tax,
+                taxRate: isNaN(tax) ? 5 : tax,
+                currencySymbol: curr,
+                currency: curr,
+                loyaltyPointsRatio: isNaN(pts) ? 10 : pts,
+                pointsRatio: isNaN(pts) ? 10 : pts
+              };
+              const serialized = JSON.stringify(canonical);
+              localStorage.setItem('freshHarvestStoreSettings', serialized);
+              localStorage.setItem('freshHarvestSettings', serialized);
+              localStorage.setItem('pos_settings', serialized);
+            }
+          } catch (e) {
+            console.warn('DataStore legacy settings migration warning:', e);
+          }
+        } else {
+          // Pure fresh start with zero settings anywhere: seed defaults once
+          const serialized = JSON.stringify(DEFAULT_SETTINGS);
+          localStorage.setItem('freshHarvestStoreSettings', serialized);
+          localStorage.setItem('freshHarvestSettings', serialized);
+          localStorage.setItem('pos_settings', serialized);
+        }
       }
 
       // Suppliers
@@ -1360,7 +1439,8 @@
       const cleanPhone = phone.trim();
       let customer = custs.find(c => c.phone && c.phone.replace(/\s+/g, '') === cleanPhone.replace(/\s+/g, ''));
 
-      const earnedPoints = Math.floor(amount / 10); // 1 point per ₹10
+      const pointsRatio = Number(this.getSettings().loyaltyPointsRatio || 10);
+      const earnedPoints = Math.floor(amount / (pointsRatio > 0 ? pointsRatio : 10));
 
       if (customer) {
         customer.totalSpent = (Number(customer.totalSpent) || 0) + Number(amount);
@@ -1455,14 +1535,101 @@
 
     // SETTINGS
     getSettings() {
-      const s = this.get('SETTINGS');
-      return s ? { ...DEFAULT_SETTINGS, ...s } : DEFAULT_SETTINGS;
+      const raw = localStorage.getItem('freshHarvestStoreSettings') ||
+                  localStorage.getItem('freshHarvestSettings') ||
+                  localStorage.getItem('pos_settings');
+      let s = null;
+      try {
+        s = raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        s = null;
+      }
+
+      const merged = s && typeof s === 'object' ? { ...DEFAULT_SETTINGS, ...s } : { ...DEFAULT_SETTINGS };
+      const name = (merged.supermarketName || merged.storeName || DEFAULT_SETTINGS.supermarketName || '').trim();
+      const slogan = (merged.slogan || merged.tagline || DEFAULT_SETTINGS.slogan || '').trim();
+      const address = (merged.address !== undefined && merged.address !== null ? String(merged.address) : DEFAULT_SETTINGS.address).trim();
+      const phone = (merged.phone !== undefined && merged.phone !== null ? String(merged.phone) : DEFAULT_SETTINGS.phone).trim();
+      const email = (merged.email !== undefined && merged.email !== null ? String(merged.email) : DEFAULT_SETTINGS.email).trim();
+      const gstin = (merged.gstin || merged.gstNumber || DEFAULT_SETTINGS.gstin || '').trim();
+      const tax = merged.defaultGstRate !== undefined ? Number(merged.defaultGstRate) : (merged.taxRate !== undefined ? Number(merged.taxRate) : DEFAULT_SETTINGS.defaultGstRate);
+      const curr = (merged.currencySymbol || merged.currency || DEFAULT_SETTINGS.currencySymbol || '₹').trim();
+      const pts = merged.loyaltyPointsRatio !== undefined ? Number(merged.loyaltyPointsRatio) : (merged.pointsRatio !== undefined ? Number(merged.pointsRatio) : DEFAULT_SETTINGS.loyaltyPointsRatio);
+      const recHeader = (merged.receiptHeader !== undefined && merged.receiptHeader !== null ? String(merged.receiptHeader) : DEFAULT_SETTINGS.receiptHeader).trim();
+      const recFooter = (merged.receiptFooter !== undefined && merged.receiptFooter !== null ? String(merged.receiptFooter) : (merged.receiptFooterMessage !== undefined && merged.receiptFooterMessage !== null ? String(merged.receiptFooterMessage) : DEFAULT_SETTINGS.receiptFooter)).trim();
+
+      merged.supermarketName = name;
+      merged.storeName = name;
+      merged.slogan = slogan;
+      merged.tagline = slogan;
+      merged.address = address;
+      merged.phone = phone;
+      merged.email = email;
+      merged.gstin = gstin;
+      merged.gstNumber = gstin;
+      merged.defaultGstRate = isNaN(tax) ? 5 : tax;
+      merged.taxRate = isNaN(tax) ? 5 : tax;
+      merged.currencySymbol = curr;
+      merged.currency = curr;
+      merged.loyaltyPointsRatio = isNaN(pts) ? 10 : pts;
+      merged.pointsRatio = isNaN(pts) ? 10 : pts;
+      merged.receiptHeader = recHeader;
+      merged.receiptFooter = recFooter;
+      merged.receiptFooterMessage = recFooter;
+
+      return merged;
     },
 
     saveSettings(newSettings) {
       const current = this.getSettings();
       const updated = { ...current, ...newSettings };
-      this.set('SETTINGS', updated);
+
+      const name = (updated.supermarketName || updated.storeName || current.supermarketName || '').trim();
+      const slogan = (updated.slogan || updated.tagline || current.slogan || '').trim();
+      const address = (updated.address !== undefined && updated.address !== null ? String(updated.address) : current.address).trim();
+      const phone = (updated.phone !== undefined && updated.phone !== null ? String(updated.phone) : current.phone).trim();
+      const email = (updated.email !== undefined && updated.email !== null ? String(updated.email) : current.email).trim();
+      const gstin = (updated.gstin || updated.gstNumber || current.gstin || '').trim();
+      const tax = updated.defaultGstRate !== undefined ? Number(updated.defaultGstRate) : (updated.taxRate !== undefined ? Number(updated.taxRate) : current.defaultGstRate);
+      const curr = (updated.currencySymbol || updated.currency || current.currencySymbol || '₹').trim();
+      const pts = updated.loyaltyPointsRatio !== undefined ? Number(updated.loyaltyPointsRatio) : (updated.pointsRatio !== undefined ? Number(updated.pointsRatio) : current.loyaltyPointsRatio);
+      const recHeader = (updated.receiptHeader !== undefined && updated.receiptHeader !== null ? String(updated.receiptHeader) : current.receiptHeader).trim();
+      const recFooter = (updated.receiptFooter !== undefined && updated.receiptFooter !== null ? String(updated.receiptFooter) : (updated.receiptFooterMessage !== undefined && updated.receiptFooterMessage !== null ? String(updated.receiptFooterMessage) : current.receiptFooter)).trim();
+
+      updated.supermarketName = name;
+      updated.storeName = name;
+      updated.slogan = slogan;
+      updated.tagline = slogan;
+      updated.address = address;
+      updated.phone = phone;
+      updated.email = email;
+      updated.gstin = gstin;
+      updated.gstNumber = gstin;
+      updated.defaultGstRate = isNaN(tax) ? 5 : tax;
+      updated.taxRate = isNaN(tax) ? 5 : tax;
+      updated.currencySymbol = curr;
+      updated.currency = curr;
+      updated.loyaltyPointsRatio = isNaN(pts) ? 10 : pts;
+      updated.pointsRatio = isNaN(pts) ? 10 : pts;
+      updated.receiptHeader = recHeader;
+      updated.receiptFooter = recFooter;
+      updated.receiptFooterMessage = recFooter;
+
+      const serialized = JSON.stringify(updated);
+      try {
+        localStorage.setItem('freshHarvestStoreSettings', serialized);
+        localStorage.setItem('freshHarvestSettings', serialized);
+        localStorage.setItem('pos_settings', serialized);
+      } catch (e) {
+        console.error('Failed to persist settings:', e);
+        return false;
+      }
+
+      window.dispatchEvent(new CustomEvent('freshHarvestSettingsUpdated', { detail: updated }));
+      window.dispatchEvent(new CustomEvent('freshHarvestDataUpdated', { detail: { key: 'SETTINGS', data: updated } }));
+      if (typeof window.applyStoreIdentityToDOM === 'function') {
+        window.applyStoreIdentityToDOM(updated);
+      }
       return updated;
     },
 

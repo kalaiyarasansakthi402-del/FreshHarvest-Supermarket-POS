@@ -79,48 +79,14 @@ select,
 .clickable-row,
 .pagination-btn,
 .dropdown-item,
-.btn-fullscreen,
 .restock-chip {
   cursor: pointer !important;
-}
-
-/* Shared Fullscreen Toggle Button */
-.btn-fullscreen {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: #f1f5f9;
-  color: #334155;
-  border: 1.5px solid #cbd5e1;
-  padding: 8px 14px;
-  border-radius: var(--radius-md, 10px);
-  font-size: 0.84rem;
-  font-weight: 700;
-  cursor: pointer !important;
-  transition: all 0.2s ease;
-  user-select: none;
-  white-space: nowrap;
-}
-
-.btn-fullscreen:hover {
-  background: #e2e8f0;
-  border-color: #94a3b8;
-  color: #0f172a;
-  transform: translateY(-1px);
-}
-
-.btn-fullscreen.active {
-  background: #dcfce7;
-  color: #15803d;
-  border-color: #86efac;
 }
 
 /* Interactive transitions & pressed state */
 button,
 .btn-primary,
 .btn-secondary,
-.btn-fullscreen,
 .btn-modal-primary,
 .btn-modal-secondary,
 .cat-pill,
