@@ -171,42 +171,87 @@ body {
   border-color: var(--color-primary);
 }
 
-.settings-actions {
+/* STORE SETTINGS ACTIONS BAR */
+.store-settings-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 14px;
-  margin-top: 10px;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0 40px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #dbe7e2;
+  border-radius: 14px;
+  position: relative;
+  z-index: 10;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-save-store-settings {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  background: #16a34a;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative;
+  z-index: 20;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+  transition: all 0.2s;
+}
+
+.btn-save-store-settings:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+.btn-save-store-settings:active {
+  transform: translateY(1px);
+}
+
+.store-settings-save-status {
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
 }
 
 .btn-secondary {
   background: white;
   border: 1px solid var(--border-color);
-  padding: 12px 24px;
-  border-radius: var(--radius-pill);
+  padding: 12px 20px;
+  border-radius: 10px;
   font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 12px 28px;
-  border-radius: var(--radius-pill);
-  font-weight: 800;
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+  font-size: 0.88rem;
+  cursor: pointer !important;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 
-.btn-primary:hover {
-  background: var(--color-primary-hover);
+.btn-secondary:hover {
+  background: #f1f5f9;
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {
   .form-row {
     grid-template-columns: 1fr;
   }
+
+  .store-settings-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-save-store-settings,
+  .btn-secondary {
+    width: 100%;
+  }
 }
+

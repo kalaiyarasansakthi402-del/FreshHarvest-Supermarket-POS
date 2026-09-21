@@ -1,4 +1,4 @@
-﻿/**
+/**
  * FreshHarvest Supermarket POS - Automated Test Suite
  */
 const fs = require('fs');
@@ -71,6 +71,31 @@ htmlFiles.forEach(f => {
 if (!legacyFound) {
   console.log('  ✅ Clean header UI across all pages (0 legacy hamburger buttons).\n');
 }
+
+// Test 5: Store Settings Save Action & Feedback Elements
+console.log('Test 5: Verifying Store Settings UI actions and elements...');
+try {
+  const storeSettingsHtml = fs.readFileSync('store-settings.html', 'utf8');
+  const storeSettingsCss = fs.readFileSync('store-settings.css', 'utf8');
+  const storeSettingsJs = fs.readFileSync('store-settings.js', 'utf8');
+  
+  if (
+    storeSettingsHtml.includes('id="saveStoreSettingsBtn"') &&
+    storeSettingsHtml.includes('class="btn-save-store-settings"') &&
+    storeSettingsHtml.includes('id="storeSettingsSaveStatus"') &&
+    storeSettingsCss.includes('.btn-save-store-settings') &&
+    storeSettingsJs.includes('saveStoreSettings')
+  ) {
+    console.log('  ✅ Store Settings Save Button and Status elements verified.\n');
+  } else {
+    console.error('  ❌ Store Settings UI elements missing or misconfigured.');
+    failed++;
+  }
+} catch (err) {
+  console.error('  ❌ Error validating store settings:', err.message);
+  failed++;
+}
+
 
 console.log('====================================================');
 if (failed === 0) {

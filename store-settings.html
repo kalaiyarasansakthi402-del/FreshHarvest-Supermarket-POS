@@ -234,10 +234,24 @@
             </div>
           </div>
 
-          <!-- FORM ACTIONS -->
-          <div class="settings-actions">
-            <button type="button" class="btn-secondary" onclick="resetSettingsDefaults()">Reset to Defaults</button>
-            <button type="submit" class="btn-primary">💾 Save Store Settings</button>
+          <!-- STORE SETTINGS ACTIONS -->
+          <div class="store-settings-actions">
+            <button
+                type="button"
+                id="saveStoreSettingsBtn"
+                class="btn-save-store-settings">
+                💾 Save Store Settings
+            </button>
+
+            <button type="button" class="btn-secondary" onclick="resetSettingsDefaults()">
+                ↺ Reset to Defaults
+            </button>
+
+            <span
+                id="storeSettingsSaveStatus"
+                class="store-settings-save-status"
+                aria-live="polite">
+            </span>
           </div>
         </form>
       </main>
